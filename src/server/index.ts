@@ -4,7 +4,8 @@ import "vite/modulepreload-polyfill";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import api from "./api";
+import errorHandler from "./errorHandler";
 export const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 if (!process.env["VITE"]) {
@@ -20,13 +21,6 @@ if (!process.env["VITE"]) {
 
 app.use(express.static(path.join(__dirname, "..", "public", "assets")));
 
-app.get("/api/test", (_, res) => res.json({ greeting: "Hello" }));
+app.use("/api", api);
 
-const init = async () => {
-  try {
-    // await seed();
-  } catch (error) {
-    console.log(error);
-  }
-};
-init();
+app.use(errorHandler);

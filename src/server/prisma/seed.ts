@@ -1,8 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import bcrypt from "bcrypt";
+import prisma from "./primsa";
 
 async function main() {
   // user
+  const hashPassword = await bcrypt.hash("1234", 10 /* salt rounds */);
   const admin = await prisma.user.upsert({
     where: {
       email: "admin@mail.com",
@@ -11,7 +12,7 @@ async function main() {
     create: {
       email: "admin@mail.com",
       name: "admin",
-      password: "1234",
+      password: hashPassword,
     },
   });
   // 2 profiles, 1 task each, 1 subtask each task
