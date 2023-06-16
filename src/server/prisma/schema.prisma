@@ -31,30 +31,33 @@ model User {
 }
 
 model Task {
-  id        Int       @id @default(autoincrement())
-  deadline  DateTime
-  urgency   Urgency
-  lead      Profile   @relation(fields: [profileId], references: [id])
-  profileId Int
-  user      User?     @relation(fields: [userId], references: [id])
-  userId    Int?
-  subtasks  Subtask[]
+  id               Int       @id @default(autoincrement())
+  deadline         DateTime
+  urgency          Urgency
+  lead             Profile   @relation(fields: [profileId], references: [id])
+  profileId        Int
+  user             User?     @relation(fields: [userId], references: [id])
+  userId           Int?
+  subtasks         Subtask[]
+  subtasksComplete Boolean
 }
 
 model Subtask {
-  id     Int  @id @default(autoincrement())
-  task   Task @relation(fields: [taskId], references: [id])
-  taskId Int
+  id          Int     @id @default(autoincrement())
+  task        Task    @relation(fields: [taskId], references: [id])
+  description String
+  taskId      Int
+  completed   Boolean @default(false)
 }
 
 model Profile {
   id            Int            @id @default(autoincrement())
   phone         String
-  email         String
+  email         String         @unique
   industry      String
   location      String
   lengthOfStay  Int            @default(0)
-  notes         String
+  notes         String?
   stage         Stage
   active        Boolean        @default(true)
   tasks         Task[]
