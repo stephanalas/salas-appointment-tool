@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.ts",
   "prisma": {
-    "schema": "src/server/prisma/schema.prisma"
+    "schema": "src/server/prisma/schema.prisma",
+    "seed": "ts-node src/server/prisma/seed.ts"
   },
   "scripts": {
     "dev": "vite",

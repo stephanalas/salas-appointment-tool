@@ -25,6 +25,7 @@ model User {
   id           Int           @id @default(autoincrement())
   name         String?       @db.VarChar(255)
   email        String        @unique @db.VarChar(255)
+  password     String
   tasks        Task[]
   appointments Appointment[]
 }
@@ -49,11 +50,12 @@ model Subtask {
 model Profile {
   id            Int            @id @default(autoincrement())
   phone         String
+  email         String
   industry      String
   location      String
-  lengthOfStay  Int
+  lengthOfStay  Int            @default(0)
   notes         String
-  stage         Stage          @default(CLIENT)
+  stage         Stage
   active        Boolean        @default(true)
   tasks         Task[]
   appointments  Appointment[]
