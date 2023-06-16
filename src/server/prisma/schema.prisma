@@ -10,28 +10,95 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  User      User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+enum Stage {
+  PROSPECT
+  CLIENT
+  CUSTOM
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  User   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+enum Urgency {
+  URGENT
+  LOW
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique @db.VarChar(255)
-  Post    Post[]
-  Profile Profile?
+  id           Int           @id @default(autoincrement())
+  name         String?       @db.VarChar(255)
+  email        String        @unique @db.VarChar(255)
+  tasks        Task[]
+  appointments Appointment[]
+}
+
+model Task {
+  id        Int       @id @default(autoincrement())
+  deadline  DateTime
+  urgency   Urgency
+  lead      Profile   @relation(fields: [profileId], references: [id])
+  profileId Int
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    Int?
+  subtasks  Subtask[]
+}
+
+model Subtask {
+  id     Int  @id @default(autoincrement())
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+}
+
+model Profile {
+  id            Int            @id @default(autoincrement())
+  phone         String
+  industry      String
+  location      String
+  lengthOfStay  Int
+  notes         String
+  stage         Stage          @default(CLIENT)
+  active        Boolean        @default(true)
+  tasks         Task[]
+  appointments  Appointment[]
+  campaigns     Campaign[]
+  transmissions Transmission[]
+}
+
+model Appointment {
+  id            Int      @id @default(autoincrement())
+  profile       Profile  @relation(fields: [profileId], references: [id])
+  profileId     Int
+  dateTime      DateTime
+  contactNumber String
+  notes         String
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+}
+
+model Campaign {
+  id                 Int            @id @default(autoincrement())
+  subject            String
+  body               String
+  recurring          Boolean
+  sendDateTime       DateTime
+  active             Boolean
+  emailList          String
+  campaignRecipients Profile[]
+  transmissions      Transmission[]
+}
+
+model Transmission {
+  id               Int                @id @default(autoincrement())
+  status           TransmissionStatus
+  sentTime         DateTime
+  transmissionType Stage              @default(CUSTOM)
+  isAppointment    Boolean
+  responsed        Boolean?
+  body             String
+  profile          Profile            @relation(fields: [profileId], references: [id])
+  profileId        Int
+  campaign         Campaign           @relation(fields: [campaignId], references: [id])
+  campaignId       Int
+}
+
+enum TransmissionStatus {
+  SUCCESS
+  FAILED
 }
