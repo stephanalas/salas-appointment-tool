@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   console.log(`Caught by custom error Handler\n
     Error: ${err.message}`);
   const error = {

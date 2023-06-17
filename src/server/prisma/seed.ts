@@ -16,7 +16,7 @@ async function main() {
     },
   });
   // 2 profiles, 1 task each, 1 subtask each task
-  const prospect = await prisma.profile.upsert({
+  await prisma.profile.upsert({
     where: {
       email: "prospect@mail.com",
     },
@@ -45,7 +45,7 @@ async function main() {
       },
     },
   });
-  const client = await prisma.profile.upsert({
+  await prisma.profile.upsert({
     where: {
       email: "client@mail.com",
     },
