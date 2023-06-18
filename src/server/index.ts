@@ -6,8 +6,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import api from "./api";
-import errorHandler from "./errorHandler";
+import errorHandler from "./middleware/errorHandler";
 export const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -24,4 +27,5 @@ if (!process.env.VITE) {
 app.use(express.static(path.join(__dirname, "..", "dist", "assets")));
 
 app.use("/api", api);
+
 app.use(errorHandler);
