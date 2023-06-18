@@ -1,9 +1,8 @@
-import { Outlet } from "react-router-dom";
-
+import Authorize from "../utils/authorize";
 function App() {
   return (
     <>
-      <Outlet />
+      <Authorize />
     </>
   );
 }
