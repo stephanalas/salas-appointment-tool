@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit";
+// import { PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   id: number | null;
