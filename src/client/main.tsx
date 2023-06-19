@@ -6,15 +6,17 @@ import ErrorPage from "./common/error-page.tsx";
 import Login from "./routes/Login.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/index.ts";
-import AppLayout from "./common/AppLayout.tsx";
-
+import App from "./App.tsx";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppLayout />,
+    element: <App />,
     errorElement: <ErrorPage />,
     children: [
       // index would be dashboard component
+
       {
         path: "/login",
         element: <Login />,
@@ -22,11 +24,13 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
+const persistor = persistStore(store);
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );
