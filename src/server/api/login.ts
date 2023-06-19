@@ -6,7 +6,6 @@ const loginRouter = Router();
 
 loginRouter.post("/", async (req, res, next) => {
   try {
-    console.log(req);
     const { email, password } = req.body;
     const user = await prisma.user.findUniqueOrThrow({
       where: {
@@ -18,14 +17,18 @@ loginRouter.post("/", async (req, res, next) => {
       throw new Error("Incorrect email & password combination");
     }
     // use exp eventually to expire token
-    const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY!);
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.SECRET_KEY!
+    );
     return res
       .cookie("access_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV == "production",
+        secure: true,
       })
       .status(200)
-      .json({ user, token });
+      .json({ user });
   } catch (error) {
     next(error);
   }

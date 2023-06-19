@@ -2,21 +2,33 @@ import { useState, FormEventHandler } from "react";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { useLoginMutation } from "../store/api";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { setCredentials } from "../store/slices/authSlice";
+import { Navigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [login, result] = useLoginMutation();
+  const [login] = useLoginMutation();
+  const user = useAppSelector((store) => store.auth.user);
+  const dispatch = useAppDispatch();
+
   const handleSubmit: FormEventHandler = async (event) => {
     event.preventDefault();
-    console.log("email", email);
-    console.log("password", password);
+    console.log("hey");
     try {
-      await login({ email, password });
+      const auth = await login({ email, password }).unwrap();
+      if (auth.user) {
+        //TODO
+        dispatch(setCredentials({ user: auth.user }));
+        // we got the user, save user to the store and navigate to dashboard page
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  return (
+  return user ? (
+    <Navigate to="/" />
+  ) : (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
         <Form.Label>Login</Form.Label>

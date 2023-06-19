@@ -1,13 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
-
+import { logout } from "./slices/authSlice";
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
 export interface UserResponse {
-  token: string;
   user: User;
 }
 export interface User {
@@ -20,13 +18,6 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
-    prepareHeaders: (headers) => {
-      const token = Cookies.get("access_token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
   }),
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
@@ -36,7 +27,16 @@ export const api = createApi({
         body: data,
       }),
     }),
+    logout: builder.mutation<{ message: string }, void>({
+      query: () => ({
+        url: "logout",
+        method: "DELETE",
+      }),
+      onQueryStarted(arg, { dispatch }) {
+        dispatch(logout());
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation } = api;
+export const { useLoginMutation, useLogoutMutation } = api;
