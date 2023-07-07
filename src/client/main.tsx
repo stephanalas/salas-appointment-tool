@@ -13,7 +13,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import App from "./App.tsx";
-import Dashboard from "./routes/Dashboard.tsx";
+import Dashboard from "./routes/dashboard/Dashboard.tsx";
 
 const router = createBrowserRouter([
   {
