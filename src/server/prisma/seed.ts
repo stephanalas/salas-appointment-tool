@@ -76,6 +76,8 @@ async function main() {
       },
     },
   });
+
+  // seed appointments
 }
 
 main()
