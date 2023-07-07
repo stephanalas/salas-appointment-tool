@@ -32,7 +32,7 @@ export const api = createApi({
         url: "logout",
         method: "DELETE",
       }),
-      onQueryStarted(arg, { dispatch }) {
+      onQueryStarted(_arg, { dispatch }) {
         dispatch(logout());
       },
     }),
