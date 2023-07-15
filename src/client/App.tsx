@@ -15,9 +15,12 @@ const App = () => {
       <CssBaseline />
       <BootstrapNavbar />
       {!user && <Navigate to="/login" />}
-      <Container disableGutters maxWidth="lg">
+      <Container disableGutters maxWidth="xl">
         <Paper
-          sx={{ height: "100vh", marginTop: !matches ? "1rem" : 0 }}
+          sx={{
+            height: "100vh",
+            marginTop: !matches ? "1rem" : 0,
+          }}
           square
           elevation={1}
         >

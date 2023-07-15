@@ -1,46 +1,27 @@
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import UpcomingAppointments from "./UpcomingAppointments";
+import Tasks from "./widgets/Tasks";
+import UpcomingAppointments from "./widgets/UpcomingAppointments";
+import { useMediaQuery, useTheme } from "@mui/material";
+import RecentCampaigns from "./widgets/RecentCampaigns";
 
 const Dashboard = () => {
+  const { breakpoints } = useTheme();
+  const matches = useMediaQuery(breakpoints.down("md"));
   return (
-    <Grid container>
-      <Grid item container direction="row">
-        <Paper
-          sx={{
-            minWidth: "25vw",
-            maxWidth: "100%",
-            paddingTop: ".5rem",
-            paddingBottom: ".5rem",
-          }}
-        >
-          <Grid
-            item
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography>todays tasks: 5</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>urgent tasks: 2</Typography>
-            </Grid>
-
-            <Grid item>
-              <Button variant="contained">Create Task</Button>
-            </Grid>
-          </Grid>
-        </Paper>
-        <UpcomingAppointments />
-      </Grid>
-      <Grid item container>
-        campaign component
-      </Grid>
+    <Grid
+      item
+      container
+      direction="row"
+      spacing={2}
+      justifyContent="space-around"
+      sx={{
+        margin: matches ? 0 : "1rem",
+      }}
+    >
+      <Tasks />
+      {/* upcoming appointments has grid item container as parent element*/}
+      <UpcomingAppointments />
+      <RecentCampaigns />
     </Grid>
   );
 };
