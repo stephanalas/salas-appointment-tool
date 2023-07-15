@@ -19,7 +19,6 @@ const Dashboard = () => {
       }}
     >
       <Tasks />
-      {/* upcoming appointments has grid item container as parent element*/}
       <UpcomingAppointments />
       <RecentCampaigns />
     </Grid>
