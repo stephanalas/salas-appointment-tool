@@ -12,11 +12,13 @@ import Menu from "@mui/material/Menu";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapNavbar = () => {
   const auth = useAppSelector((store) => store.auth);
   const [logout] = useLogoutMutation();
   const { breakpoints } = useTheme();
+  const navigate = useNavigate();
   // const matches = useMediaQuery(breakpoints);
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -34,18 +36,24 @@ const BootstrapNavbar = () => {
   const pages = [
     "Dashboard",
     "Tasks",
-    "Campaigns",
-    "Appointments",
     "Profiles",
+    "Appointments",
+    "Campaigns",
     "Transmission",
     "Log out",
   ];
 
   const handleNavItems = async (navItem: string) => {
     try {
-      if (navItem == "Log out") {
-        const response = await logout().unwrap();
-        console.log("response", response);
+      switch (navItem) {
+        case "Log out":
+          await logout().unwrap();
+          break;
+        case "Dashboard":
+          navigate("/");
+          break;
+        default:
+          navigate(navItem.toLowerCase());
       }
     } catch (error) {
       console.log(error);
@@ -53,72 +61,80 @@ const BootstrapNavbar = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {auth.user && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              sx={{
-                mr: 2,
-                display: { xs: "block", sm: "none" },
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {auth.user && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                sx={{
+                  mr: 2,
+                  display: { xs: "block", sm: "none" },
+                }}
+                onClick={handleOpenNavMenu}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
               }}
-              onClick={handleOpenNavMenu}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: "block", md: "none" },
+              }}
             >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            open={Boolean(anchorElNav)}
-            onClose={handleCloseNavMenu}
-            sx={{
-              display: { xs: "block", md: "none" },
-            }}
-          >
-            {auth.user &&
-              pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-          </Menu>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "block" } }}
-          >
-            gen-marketing-tool
-          </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {auth.user &&
-              pages.map((item) => {
-                return (
-                  <Button
+              {auth.user &&
+                pages.map((item) => (
+                  <MenuItem
                     key={item}
-                    sx={{ color: "#fff" }}
-                    onClick={() => handleNavItems(item)}
+                    onClick={() => {
+                      handleNavItems(item);
+                      handleCloseNavMenu();
+                    }}
                   >
-                    {item}
-                  </Button>
-                );
-              })}
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                    <Typography>{item}</Typography>
+                  </MenuItem>
+                ))}
+            </Menu>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: "block" } }}
+            >
+              gen-marketing-tool
+            </Typography>
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              {auth.user &&
+                pages.map((item) => {
+                  return (
+                    <Button
+                      key={item}
+                      sx={{ color: "#fff" }}
+                      onClick={() => handleNavItems(item)}
+                    >
+                      {item}
+                    </Button>
+                  );
+                })}
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </Box>
     // <Navbar expand="lg" className="bg-body-tertiary">
     //   <Container>
     //     <Navbar.Brand href="/">Gen-Marketing-Tool</Navbar.Brand>
