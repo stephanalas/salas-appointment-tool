@@ -14,6 +14,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import App from "./App.tsx";
 import Dashboard from "./routes/dashboard/Dashboard.tsx";
+import Profiles from "./routes/profiles/Profiles.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,8 +30,12 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/login",
+        path: "login",
         element: <Login />,
+      },
+      {
+        path: "profiles",
+        element: <Profiles />,
       },
     ],
   },
