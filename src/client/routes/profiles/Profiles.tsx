@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { faker } from "@faker-js/faker";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ProfileDialog from "./ProfileDialog";
 
 type RowData = {
   id: number;
@@ -79,8 +82,9 @@ const generateFakeRows = () => {
 
 generateFakeRows();
 const Profiles = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { breakpoints } = useTheme();
-  const matches = useMediaQuery(breakpoints.down("md"));
+  const matches = useMediaQuery(breakpoints.down("sm"));
   return (
     <Grid
       item
@@ -107,9 +111,16 @@ const Profiles = () => {
             sx={{
               width: matches ? "50vw" : "10vw",
             }}
+            onClick={() => setDialogOpen(!dialogOpen)}
           >
             Add profile
           </Button>
+          <ProfileDialog
+            open={dialogOpen}
+            onClose={() => {
+              setDialogOpen(false);
+            }}
+          />
         </Grid>
       </Grid>
       <Grid item sx={{ height: "50vh", width: "100%" }}>

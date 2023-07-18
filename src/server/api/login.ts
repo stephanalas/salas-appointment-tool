@@ -2,6 +2,7 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../prisma/primsa";
 import bcrypt from "bcrypt";
+
 const loginRouter = Router();
 
 loginRouter.post("/", async (req, res, next) => {

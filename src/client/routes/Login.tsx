@@ -2,7 +2,7 @@
 import { useLoginMutation } from "../store/api";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Navigate } from "react-router-dom";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -21,10 +21,16 @@ const Login = () => {
   const dispatch = useAppDispatch();
 
   const {
+    control,
     register,
     handleSubmit,
     // formState: { errors },
-  } = useForm<Credentials>();
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit: SubmitHandler<Credentials> = async (data) => {
     try {
@@ -65,29 +71,41 @@ const Login = () => {
             <AccountCircleRoundedIcon sx={{ fontSize: 50 }} color="secondary" />
           </Grid>
           <Grid item>
-            <TextField
-              id="email-input"
-              label="Email"
-              type="email"
-              color="secondary"
-              sx={{
-                maxWidth: "50vw",
-                minWidth: "25vw",
-              }}
-              {...register("email", { required: true })}
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="email-input"
+                  label="Email"
+                  type="email"
+                  color="secondary"
+                  sx={{
+                    maxWidth: "50vw",
+                    minWidth: "25vw",
+                  }}
+                />
+              )}
             />
           </Grid>
           <Grid item>
-            <TextField
-              id="password-input"
-              label="Password"
-              type="password"
-              color="secondary"
-              sx={{
-                maxWidth: "50vw",
-                minWidth: "25vw",
-              }}
-              {...register("password", { required: true })}
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="password-input"
+                  label="Password"
+                  type="password"
+                  color="secondary"
+                  sx={{
+                    maxWidth: "50vw",
+                    minWidth: "25vw",
+                  }}
+                />
+              )}
             />
           </Grid>
           <Grid item>
