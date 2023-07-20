@@ -37,9 +37,7 @@ const Login = () => {
       const { email, password } = data;
       const auth = await login({ email, password }).unwrap();
       if (auth.user) {
-        //TODO
         dispatch(setCredentials({ user: auth.user }));
-        // we got the user, save user to the store and navigate to dashboard page
       }
     } catch (error) {
       console.log(error);

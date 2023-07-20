@@ -10,6 +10,9 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { Stage, Profile } from "../../store/api";
 import { useCreateProfileMutation } from "../../store/api";
+
+import { ToastContainer, toast } from "react-toastify";
+
 type DialogProps = {
   open: boolean;
   onClose: () => void;
@@ -30,6 +33,16 @@ const stageOptions: StageOption[] = [
     value: "CLIENT",
   },
 ];
+
+interface IFormInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  industry: string;
+  stage: Stage | { label: string; value: string };
+  notes: string;
+}
 
 const ProfileDialog = (props: DialogProps) => {
   const { open, onClose } = props;
@@ -61,19 +74,22 @@ const ProfileDialog = (props: DialogProps) => {
     ));
   };
 
-  const onSubmit: SubmitHandler<Profile> = async (data) => {
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
       const payload = { ...data, stage: data.stage };
       const response = await createProfile(payload).unwrap();
+      console.log(response);
+      handleClose();
+      toast.success("Response received");
     } catch (error) {
-      console.log("Something went wrong", error);
+      toast.error("Something went wrong");
+      console.log(error);
     }
   };
   const handleClose = () => {
     onClose();
     reset();
   };
-  // TODO: switch to 07
   return (
     <Dialog
       open={open}

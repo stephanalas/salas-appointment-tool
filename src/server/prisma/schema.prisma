@@ -52,14 +52,13 @@ model Subtask {
 
 model Profile {
   id            Int            @id @default(autoincrement())
-  phone         String
+  firstName     String
+  lastName      String
+  phoneNumber   String
   email         String         @unique
   industry      String
-  location      String
-  lengthOfStay  Int            @default(0)
   notes         String?
   stage         Stage
-  active        Boolean        @default(true)
   tasks         Task[]
   appointments  Appointment[]
   campaigns     Campaign[]

@@ -22,6 +22,7 @@ export interface User {
 export type Stage = "PROSPECT" | "CLIENT";
 
 export interface Profile {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -53,7 +54,13 @@ export const api = createApi({
         dispatch(logout());
       },
     }),
-    createProfile: builder.mutation<MessageResponse, Profile>({
+    getAllProfiles: builder.query<Profile[], void>({
+      query: () => ({
+        url: "profiles",
+        method: "GET",
+      }),
+    }),
+    createProfile: builder.mutation<MessageResponse, Partial<Profile>>({
       query: (data) => ({
         url: "profiles",
         method: "POST",
@@ -63,5 +70,9 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useCreateProfileMutation } =
-  api;
+export const {
+  useGetAllProfilesQuery,
+  useLoginMutation,
+  useLogoutMutation,
+  useCreateProfileMutation,
+} = api;
