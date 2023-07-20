@@ -8,28 +8,19 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
-
+import { Stage, Profile } from "../../store/api";
+import { useCreateProfileMutation } from "../../store/api";
 type DialogProps = {
   open: boolean;
   onClose: () => void;
 };
 
-interface Stage {
-  label: string;
-  value: string;
-}
+type StageOption = {
+  label: Stage;
+  value: Stage;
+};
 
-interface IFormInput {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  industry: string;
-  stage: Stage;
-  notes: string;
-}
-
-const stageOptions: Stage[] = [
+const stageOptions: StageOption[] = [
   {
     label: "PROSPECT",
     value: "PROSPECT",
@@ -42,6 +33,7 @@ const stageOptions: Stage[] = [
 
 const ProfileDialog = (props: DialogProps) => {
   const { open, onClose } = props;
+  const [createProfile] = useCreateProfileMutation();
   const {
     control,
     reset,
@@ -62,15 +54,20 @@ const ProfileDialog = (props: DialogProps) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const renderOptions = () => {
-    return stageOptions.map((option: Stage) => (
+    return stageOptions.map((option: StageOption) => (
       <MenuItem key={option.value} value={option.value}>
         {option.label}
       </MenuItem>
     ));
   };
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log("submitting", data);
+  const onSubmit: SubmitHandler<Profile> = async (data) => {
+    try {
+      const payload = { ...data, stage: data.stage };
+      const response = await createProfile(payload).unwrap();
+    } catch (error) {
+      console.log("Something went wrong", error);
+    }
   };
   const handleClose = () => {
     onClose();

@@ -1,5 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logout } from "./slices/authSlice";
+
+interface MessageResponse {
+  error: boolean;
+  message: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -12,6 +18,17 @@ export interface User {
   id: number;
   name: string;
   email: string;
+}
+export type Stage = "PROSPECT" | "CLIENT";
+
+export interface Profile {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  industry: string;
+  stage: Stage | { label: string; value: string };
+  notes: string;
 }
 
 export const api = createApi({
@@ -27,7 +44,7 @@ export const api = createApi({
         body: data,
       }),
     }),
-    logout: builder.mutation<{ message: string }, void>({
+    logout: builder.mutation<MessageResponse, void>({
       query: () => ({
         url: "logout",
         method: "DELETE",
@@ -36,7 +53,15 @@ export const api = createApi({
         dispatch(logout());
       },
     }),
+    createProfile: builder.mutation<MessageResponse, Profile>({
+      query: (data) => ({
+        url: "profiles",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = api;
+export const { useLoginMutation, useLogoutMutation, useCreateProfileMutation } =
+  api;
