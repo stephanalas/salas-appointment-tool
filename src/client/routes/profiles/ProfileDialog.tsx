@@ -5,11 +5,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { InputLabel } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 type DialogProps = {
   open: boolean;
@@ -33,8 +31,8 @@ interface IFormInput {
 
 const stageOptions: Stage[] = [
   {
-    label: "PROPSECT",
-    value: "PROPSECT",
+    label: "PROSPECT",
+    value: "PROSPECT",
   },
   {
     label: "CLIENT",
@@ -56,10 +54,12 @@ const ProfileDialog = (props: DialogProps) => {
       email: "",
       phoneNumber: "",
       industry: "",
-      stage: { label: "", value: "" },
+      stage: { label: "PROSPECT", value: "PROSPECT" },
       notes: "",
     },
   });
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const renderOptions = () => {
     return stageOptions.map((option: Stage) => (
@@ -78,18 +78,16 @@ const ProfileDialog = (props: DialogProps) => {
   };
   // TODO: switch to 07
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth={true}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth={true}
+      fullScreen={fullScreen}
+    >
       <DialogTitle>Add Profile</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid
-            container
-            justifyContent={"space-around"}
-            sx={{
-              margin: ".5rem",
-              padding: ".5rem",
-            }}
-          >
+          <Grid container justifyContent={"space-around"}>
             <Controller
               name="firstName"
               control={control}
@@ -99,6 +97,7 @@ const ProfileDialog = (props: DialogProps) => {
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
+                  margin="dense"
                   label="First name"
                   helperText={error ? "Missing first name" : null}
                   error={!!error}
@@ -116,19 +115,13 @@ const ProfileDialog = (props: DialogProps) => {
                   {...field}
                   label="Last name"
                   helperText={error ? "Missing last name" : null}
+                  margin="dense"
                   error={!!error}
                 />
               )}
             />
           </Grid>
-          <Grid
-            container
-            justifyContent={"space-around"}
-            sx={{
-              margin: ".5rem",
-              padding: ".5rem",
-            }}
-          >
+          <Grid container justifyContent={"space-around"}>
             <Controller
               name="email"
               rules={{
@@ -139,6 +132,7 @@ const ProfileDialog = (props: DialogProps) => {
                 <TextField
                   {...field}
                   label="Email"
+                  margin="dense"
                   helperText={error ? "Missing Email" : null}
                   error={!!error}
                 />
@@ -153,6 +147,7 @@ const ProfileDialog = (props: DialogProps) => {
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
+                  margin="dense"
                   label="Phone number"
                   helperText={error ? "Missing Phone number" : null}
                   error={!!error}
@@ -160,60 +155,59 @@ const ProfileDialog = (props: DialogProps) => {
               )}
             />
           </Grid>
-          <Grid
-            container
-            justifyContent={"space-around"}
-            sx={{
-              margin: ".5rem",
-              padding: ".5rem",
-            }}
-          >
+          <Grid container justifyContent={"space-around"}>
             <Controller
               name="industry"
               control={control}
-              render={({ field }) => <TextField {...field} label="Industry" />}
+              render={({ field }) => (
+                <TextField {...field} label="Industry" margin="dense" />
+              )}
             />
-
             <Controller
               name="stage"
               control={control}
               rules={{
                 required: true,
               }}
-              render={({ field }) => (
+              render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
-                  label="Stage"
-                  select
-                  children={renderOptions()}
-                />
-              )}
-            />
-            {/* <Controller
-              name="stage"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  onChange={(e) =>
+                  value={field.value.value}
+                  onChange={(e) => {
                     field.onChange({
                       label: e.target.value,
                       value: e.target.value,
-                    })
-                  }
-                  sx={{
-                    width: "40%",
+                    });
                   }}
                   label="Stage"
-                  value={field.value.label}
-                >
-                  {renderOptions()}
-                </Select> 
+                  select
+                  margin="dense"
+                  children={renderOptions()}
+                  helperText={error ? "Select stage" : null}
+                  error={!!error}
+                  sx={{
+                    width: "23.5ch",
+                  }}
+                />
               )}
             />
-            */}
           </Grid>
-          <Grid container></Grid>
+          <Grid container justifyContent={"space-around"}>
+            <Controller
+              name="notes"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  label="Notes (Optional)"
+                  margin="normal"
+                />
+              )}
+            />
+          </Grid>
 
           <DialogActions>
             <Button onClick={handleClose} type="button">
