@@ -27,7 +27,38 @@ profileRouter.post("/", async (req, res, next) => {
     await prisma.profile.create({
       data,
     });
-    res.send({ message: "API WORKS", error: false });
+    res.send({ message: "Profile Created", error: false });
+  } catch (error) {
+    next(error);
+  }
+});
+
+profileRouter.put("/:id", async (req, res, next) => {
+  try {
+    const data = req.body;
+    await prisma.profile.update({
+      where: {
+        id: data.id,
+      },
+      data,
+    });
+    res.send({ message: "Profile Updated", error: false });
+  } catch (error) {
+    next(error);
+  }
+});
+
+profileRouter.delete("/:id", async (req, res, next) => {
+  try {
+    // deleting profile might require deleting other associated data first
+    const profileId = req.params.id;
+
+    await prisma.profile.delete({
+      where: {
+        id: +profileId,
+      },
+    });
+    res.send({ message: "Profile Deleted", error: false });
   } catch (error) {
     next(error);
   }

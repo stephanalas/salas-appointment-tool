@@ -84,7 +84,6 @@ const ProfileDialog = (props: DialogProps) => {
   };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    // TODO: DISABLE BUTTONS WHEN SUBMITTING
     try {
       let response;
       if (profile) {
@@ -112,12 +111,15 @@ const ProfileDialog = (props: DialogProps) => {
     try {
       if (profile) {
         const response = await deleteProfile(profile.id).unwrap();
-        toast.success("response received");
+        if (response.error) throw response.message;
+        toast.success(response.message);
         handleClose();
       }
     } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
+      if (typeof error == "string") {
+        toast.error(error);
+        console.log(error);
+      }
     }
   };
 

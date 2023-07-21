@@ -55,7 +55,6 @@ const Profiles = () => {
     setSelectedProfile(params.row);
     setDialogOpen(true);
   };
-  // TODO: PROFILE DIALOG SHOULD OPEN WHEN ROW IS CLICKED
   return (
     <Grid
       item

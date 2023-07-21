@@ -30,12 +30,12 @@ export interface Profile {
   stage: string;
   notes: string;
 }
-// TODO: provide tags to invalidate for profiles
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
   }),
+  tagTypes: ["Profile"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (data) => ({
@@ -59,12 +59,14 @@ export const api = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Profile"],
     }),
     getAllProfiles: builder.query<Profile[], void>({
       query: () => ({
         url: "profiles",
         method: "GET",
       }),
+      providesTags: ["Profile"],
     }),
     updateProfile: builder.mutation<MessageResponse, Profile>({
       query: (data) => ({
@@ -72,12 +74,14 @@ export const api = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Profile"],
     }),
     deleteProfile: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `profiles/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Profile"],
     }),
   }),
 });
