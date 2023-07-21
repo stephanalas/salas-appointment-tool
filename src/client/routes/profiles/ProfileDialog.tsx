@@ -8,31 +8,14 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { Stage, Profile } from "../../store/api";
 import { useCreateProfileMutation } from "../../store/api";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 type DialogProps = {
   open: boolean;
   onClose: () => void;
 };
-
-type StageOption = {
-  label: Stage;
-  value: Stage;
-};
-
-const stageOptions: StageOption[] = [
-  {
-    label: "PROSPECT",
-    value: "PROSPECT",
-  },
-  {
-    label: "CLIENT",
-    value: "CLIENT",
-  },
-];
 
 interface IFormInput {
   firstName: string;
@@ -40,47 +23,44 @@ interface IFormInput {
   email: string;
   phoneNumber: string;
   industry: string;
-  stage: Stage | { label: string; value: string };
+  stage: string;
   notes: string;
 }
 
 const ProfileDialog = (props: DialogProps) => {
+  // TODO: PROFILE DIALOG SHOULD BE USED FOR EDITING PROFILES AS WELL
   const { open, onClose } = props;
   const [createProfile] = useCreateProfileMutation();
-  const {
-    control,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, reset, handleSubmit } = useForm({
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
       industry: "",
-      stage: { label: "PROSPECT", value: "PROSPECT" },
+      stage: "PROSPECT",
       notes: "",
     },
   });
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const renderOptions = () => {
-    return stageOptions.map((option: StageOption) => (
-      <MenuItem key={option.value} value={option.value}>
-        {option.label}
+  const renderOptions = (options: string[]) => {
+    return options.map((option: string) => (
+      <MenuItem key={option} value={option}>
+        {option}
       </MenuItem>
     ));
   };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    // TODO: DISABLE BUTTONS WHEN SUBMITTING
+    // TODO: HANDLE DELETING A PROFILE
     try {
-      const payload = { ...data, stage: data.stage };
+      const payload = { ...data };
       const response = await createProfile(payload).unwrap();
-      console.log(response);
-      handleClose();
       toast.success("Response received");
+      handleClose();
     } catch (error) {
       toast.error("Something went wrong");
       console.log(error);
@@ -185,17 +165,14 @@ const ProfileDialog = (props: DialogProps) => {
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
-                  value={field.value.value}
+                  value={field.value}
                   onChange={(e) => {
-                    field.onChange({
-                      label: e.target.value,
-                      value: e.target.value,
-                    });
+                    field.onChange(e.target.value);
                   }}
                   label="Stage"
                   select
                   margin="dense"
-                  children={renderOptions()}
+                  children={renderOptions(["PROSPECT", "CLIENT"])}
                   helperText={error ? "Select stage" : null}
                   error={!!error}
                   sx={{

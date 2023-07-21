@@ -24,13 +24,13 @@ async function main() {
     },
     update: {},
     create: {
-      phone: "1234567890",
+      firstName: "Prospect",
+      lastName: "John",
+      phoneNumber: "1234567890",
       email: "prospect@mail.com",
       industry: "tech",
-      location: "nyc",
       stage: "PROSPECT",
       notes: "notes regarding prospect",
-      active: true,
       tasks: {
         create: {
           subtasksComplete: false,
@@ -53,13 +53,13 @@ async function main() {
     },
     update: {},
     create: {
-      phone: "1234567890",
+      firstName: "Client",
+      lastName: "Jane",
+      phoneNumber: "1234567890",
       email: "client@mail.com",
       industry: "startup",
-      location: "philly",
       stage: "CLIENT",
       notes: "notes regarding client",
-      active: true,
       tasks: {
         create: {
           deadline: new Date("2023-06-19"),
