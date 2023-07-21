@@ -53,17 +53,30 @@ export const api = createApi({
         dispatch(logout());
       },
     }),
+    createProfile: builder.mutation<MessageResponse, Partial<Profile>>({
+      query: (data) => ({
+        url: "profiles",
+        method: "POST",
+        body: data,
+      }),
+    }),
     getAllProfiles: builder.query<Profile[], void>({
       query: () => ({
         url: "profiles",
         method: "GET",
       }),
     }),
-    createProfile: builder.mutation<MessageResponse, Partial<Profile>>({
+    updateProfile: builder.mutation<MessageResponse, Profile>({
       query: (data) => ({
-        url: "profiles",
-        method: "POST",
+        url: `profiles/${data.id}`,
+        method: "PUT",
         body: data,
+      }),
+    }),
+    deleteProfile: builder.mutation<MessageResponse, number>({
+      query: (id) => ({
+        url: `profiles/${id}`,
+        method: "DELETE",
       }),
     }),
   }),
@@ -74,4 +87,6 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useCreateProfileMutation,
+  useDeleteProfileMutation,
+  useUpdateProfileMutation,
 } = api;
