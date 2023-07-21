@@ -19,7 +19,6 @@ export interface User {
   name: string;
   email: string;
 }
-export type Stage = "PROSPECT" | "CLIENT";
 
 export interface Profile {
   id: number;
@@ -28,10 +27,10 @@ export interface Profile {
   email: string;
   phoneNumber: string;
   industry: string;
-  stage: Stage | { label: string; value: string };
+  stage: string;
   notes: string;
 }
-
+// TODO: provide tags to invalidate for profiles
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
