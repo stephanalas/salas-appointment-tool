@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ProfileDialog from "./ProfileDialog";
-import { useGetAllProfilesQuery } from "../../store/api";
+import { Profile, useGetAllProfilesQuery } from "../../store/api";
 import { Skeleton } from "@mui/material";
 
 const columns: GridColDef[] = [
@@ -47,9 +47,14 @@ const columns: GridColDef[] = [
 
 const Profiles = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("sm"));
   const { data, isLoading } = useGetAllProfilesQuery();
+  const handleRowClick: GridEventListener<"rowClick"> = (params) => {
+    setSelectedProfile(params.row);
+    setDialogOpen(true);
+  };
   // TODO: PROFILE DIALOG SHOULD OPEN WHEN ROW IS CLICKED
   return (
     <Grid
@@ -85,7 +90,9 @@ const Profiles = () => {
             open={dialogOpen}
             onClose={() => {
               setDialogOpen(false);
+              setSelectedProfile(null);
             }}
+            profile={selectedProfile ? selectedProfile : null}
           />
         </Grid>
       </Grid>
@@ -100,7 +107,11 @@ const Profiles = () => {
             }}
           />
         ) : (
-          <DataGrid columns={columns} rows={data || []} />
+          <DataGrid
+            columns={columns}
+            rows={data || []}
+            onRowClick={handleRowClick}
+          />
         )}
       </Grid>
     </Grid>

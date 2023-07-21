@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,15 +7,26 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { useCreateProfileMutation } from "../../store/api";
+import {
+  Profile,
+  useCreateProfileMutation,
+  useDeleteProfileMutation,
+  useUpdateProfileMutation,
+} from "../../store/api";
 
 import { toast } from "react-toastify";
 
 type DialogProps = {
   open: boolean;
   onClose: () => void;
+  profile: Profile | null;
 };
 
 interface IFormInput {
@@ -28,9 +40,15 @@ interface IFormInput {
 }
 
 const ProfileDialog = (props: DialogProps) => {
-  // TODO: PROFILE DIALOG SHOULD BE USED FOR EDITING PROFILES AS WELL
-  const { open, onClose } = props;
-  const [createProfile] = useCreateProfileMutation();
+  const { open, onClose, profile } = props;
+  const [createProfile, { isLoading: isCreateLoading }] =
+    useCreateProfileMutation();
+  const [deleteProfile, { isLoading: isDeleteLoading }] =
+    useDeleteProfileMutation();
+  const [updateProfile, { isLoading: isUpdateLoading }] =
+    useUpdateProfileMutation();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { control, reset, handleSubmit } = useForm({
     defaultValues: {
       firstName: "",
@@ -42,8 +60,20 @@ const ProfileDialog = (props: DialogProps) => {
       notes: "",
     },
   });
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    // populate form with selected profile data
+    if (profile)
+      reset({
+        firstName: profile?.firstName,
+        lastName: profile?.lastName,
+        email: profile?.email,
+        phoneNumber: profile?.phoneNumber,
+        industry: profile?.industry,
+        stage: profile?.stage,
+        notes: profile?.notes,
+      });
+  }, [profile]);
 
   const renderOptions = (options: string[]) => {
     return options.map((option: string) => (
@@ -55,21 +85,47 @@ const ProfileDialog = (props: DialogProps) => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     // TODO: DISABLE BUTTONS WHEN SUBMITTING
-    // TODO: HANDLE DELETING A PROFILE
     try {
-      const payload = { ...data };
-      const response = await createProfile(payload).unwrap();
-      toast.success("Response received");
+      let response;
+      if (profile) {
+        // request to updated
+        const payload = { ...data, id: profile.id };
+        response = await updateProfile(payload).unwrap();
+      } else {
+        // request to add
+        response = await createProfile(data).unwrap();
+      }
+      if (response.error) {
+        throw response.message;
+      }
       handleClose();
+      toast.success(response.message);
+    } catch (error) {
+      if (typeof error == "string") {
+        toast.error(error);
+        console.log(error);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (profile) {
+        const response = await deleteProfile(profile.id).unwrap();
+        toast.success("response received");
+        handleClose();
+      }
     } catch (error) {
       toast.error("Something went wrong");
       console.log(error);
     }
   };
+
   const handleClose = () => {
     onClose();
     reset();
   };
+
   return (
     <Dialog
       open={open}
@@ -77,12 +133,16 @@ const ProfileDialog = (props: DialogProps) => {
       fullWidth={true}
       fullScreen={fullScreen}
     >
-      <DialogTitle>Add Profile</DialogTitle>
+      <DialogTitle>
+        {profile
+          ? `Edit ${profile.firstName} ${profile.lastName}`
+          : "Add Profile"}
+      </DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container justifyContent={"space-around"}>
             <Controller
-              name="firstName"
+              name={`firstName`}
               control={control}
               rules={{
                 required: true,
@@ -200,10 +260,28 @@ const ProfileDialog = (props: DialogProps) => {
           </Grid>
 
           <DialogActions>
-            <Button onClick={handleClose} type="button">
+            {profile && (
+              <Button
+                onClick={handleDelete}
+                disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
+              >
+                Delete
+              </Button>
+            )}
+            <Button
+              onClick={handleClose}
+              type="button"
+              disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
+            >
               Cancel
             </Button>
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
+            >
+              {profile ? "Update" : "Submit"}
+            </Button>
           </DialogActions>
         </form>
       </DialogContent>
