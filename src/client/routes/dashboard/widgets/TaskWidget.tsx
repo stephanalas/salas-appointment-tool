@@ -3,10 +3,12 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const Tasks = () => {
+const TaskWidget = () => {
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
+  const navigate = useNavigate();
   return (
     <Grid
       item
@@ -35,7 +37,14 @@ const Tasks = () => {
           </Grid>
 
           <Grid item>
-            <Button variant="contained">Create Task</Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate("tasks");
+              }}
+            >
+              Create Task
+            </Button>
           </Grid>
         </Grid>
       </Paper>
@@ -43,4 +52,4 @@ const Tasks = () => {
   );
 };
 
-export default Tasks;
+export default TaskWidget;

@@ -39,7 +39,7 @@ const BootstrapNavbar = () => {
     "Profiles",
     "Appointments",
     "Campaigns",
-    "Transmission",
+    "Transmissions",
     "Log out",
   ];
 

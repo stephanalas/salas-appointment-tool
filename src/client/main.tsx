@@ -15,6 +15,10 @@ import "@fontsource/roboto/700.css";
 import App from "./App.tsx";
 import Dashboard from "./routes/dashboard/Dashboard.tsx";
 import Profiles from "./routes/profiles/Profiles.tsx";
+import Appointments from "./routes/appointments/Appointments.tsx";
+import Transmissions from "./routes/transmissions/Transmissions.tsx";
+import Campaigns from "./routes/campaigns/Campaigns.tsx";
+import Tasks from "./routes/tasks/Tasks.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +40,22 @@ const router = createBrowserRouter([
       {
         path: "profiles",
         element: <Profiles />,
+      },
+      {
+        path: "appointments",
+        element: <Appointments />,
+      },
+      {
+        path: "transmissions",
+        element: <Transmissions />,
+      },
+      {
+        path: "campaigns",
+        element: <Campaigns />,
+      },
+      {
+        path: "tasks",
+        element: <Tasks />,
       },
     ],
   },

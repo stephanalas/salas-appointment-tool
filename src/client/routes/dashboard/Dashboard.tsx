@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import Tasks from "./widgets/Tasks";
+import Tasks from "./widgets/TaskWidget";
 import UpcomingAppointments from "./widgets/UpcomingAppointments";
 import { useMediaQuery, useTheme } from "@mui/material";
 import RecentCampaigns from "./widgets/RecentCampaigns";
