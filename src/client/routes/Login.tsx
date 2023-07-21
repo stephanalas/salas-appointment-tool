@@ -20,12 +20,7 @@ const Login = () => {
   const user = useAppSelector((store) => store.auth.user);
   const dispatch = useAppDispatch();
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       email: "",
       password: "",
