@@ -33,16 +33,10 @@ async function main() {
       notes: "notes regarding prospect",
       tasks: {
         create: {
-          subtasksComplete: false,
           deadline: new Date("2023-06-19"),
           urgency: "URGENT",
           userId: admin.id,
-          subtasks: {
-            create: {
-              description: "sub task to do",
-              completed: false,
-            },
-          },
+          description: "task description",
         },
       },
     },
@@ -65,13 +59,7 @@ async function main() {
           deadline: new Date("2023-06-19"),
           urgency: "LOW",
           userId: admin.id,
-          subtasksComplete: false,
-          subtasks: {
-            create: {
-              description: "sub task to do",
-              completed: false,
-            },
-          },
+          description: "task description",
         },
       },
     },
