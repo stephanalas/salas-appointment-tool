@@ -3,12 +3,15 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
-const TaskWidget = () => {
+type TaskWidgetProps = {
+  setDialogOpen: () => void;
+};
+
+const TaskWidget = (props: TaskWidgetProps) => {
+  const { setDialogOpen } = props;
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
-  const navigate = useNavigate();
   return (
     <Grid
       item
@@ -37,12 +40,7 @@ const TaskWidget = () => {
           </Grid>
 
           <Grid item>
-            <Button
-              variant="contained"
-              onClick={() => {
-                navigate("tasks");
-              }}
-            >
+            <Button variant="contained" onClick={setDialogOpen}>
               Create Task
             </Button>
           </Grid>
