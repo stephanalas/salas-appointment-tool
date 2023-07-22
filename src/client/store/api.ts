@@ -30,6 +30,8 @@ export interface Profile {
   stage: string;
   notes: string;
 }
+
+// TODO: CRUD FEATURE ON TASKS (PROVIDE AND INVALIDATE TAGS)
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
