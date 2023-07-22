@@ -63,6 +63,5 @@ profileRouter.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
-// TODO: DELETE PROFILE AND UPDATE PROFILE
 
 export default profileRouter;
