@@ -7,8 +7,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { useTheme, useMediaQuery } from "@mui/material";
-import { useGetAllProfilesQuery } from "../../store/api";
+import { useTheme, useMediaQuery, MenuItem } from "@mui/material";
+import { useGetAllProfilesQuery, Profile } from "../../store/api";
+
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 interface DialogProps {
   open: boolean;
@@ -16,9 +18,9 @@ interface DialogProps {
 }
 
 interface IFormInput {
-  profile: number | null;
+  profile: Profile | null;
   urgency: string;
-  deadline: string | Date;
+  deadline: string | Date | null;
   description: string;
   completed: Boolean;
 }
@@ -27,11 +29,11 @@ const TaskDialog = (props: DialogProps) => {
   const { data: profiles, isLoading: isProfilesLoading } =
     useGetAllProfilesQuery();
   const { open = true, onClose } = props;
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit } = useForm<IFormInput>({
     defaultValues: {
       profile: null,
       urgency: "LOW",
-      deadline: "",
+      deadline: null,
       description: "",
       completed: false,
     },
@@ -53,36 +55,65 @@ const TaskDialog = (props: DialogProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container>
-            <Grid item container>
-              <Grid item>
-                <Controller
-                  name="profile"
-                  control={control}
-                  render={({ field }) => (
-                    <Autocomplete
-                      {...field}
-                      value={field.value}
-                      options={profiles || []}
-                      onChange={(e, newValue) => {
-                        if (newValue) field.onChange(e);
-                      }}
-                      renderOption={(props, option) =>
-                        `${option.firstName} ${option.lastName}`
-                      }
-                      isOptionEqualToValue={(option, value) =>
-                        option.id == value.id
-                      }
-                      renderInput={(params) => (
-                        <TextField {...params} label="profile" />
-                      )}
-                    />
+            <Controller
+              name="profile"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Autocomplete
+                  fullWidth
+                  value={value}
+                  onChange={(e, newValue) => onChange(newValue)}
+                  options={profiles || []}
+                  renderOption={(props, option) => (
+                    <MenuItem {...props} key={option.id}>
+                      {`${option.firstName} ${option.lastName}`}
+                    </MenuItem>
                   )}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id == value.id
+                  }
+                  getOptionLabel={(option) =>
+                    `${option.firstName} ${option.lastName}`
+                  }
+                  renderInput={(params) => {
+                    return <TextField {...params} label="profile" />;
+                  }}
                 />
-                profile autocomplete
-              </Grid>
-              <Grid item> urgency dropdown</Grid>
-            </Grid>
-            <Grid item>MuI calendar picker</Grid>
+              )}
+            />
+            <Controller
+              control={control}
+              name="urgency"
+              rules={{
+                required: true,
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Urgency"
+                  children={["LOW", "URGENT"].map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                  select
+                  // sx={{ width: "23.5ch" }}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="deadline"
+              rules={{ required: true }}
+              render={({ field: { value, onChange, ref } }) => (
+                <DatePicker
+                  value={value}
+                  inputRef={ref}
+                  onChange={onChange}
+                  label="deadline"
+                />
+              )}
+            />
           </Grid>
         </DialogContent>
         <DialogActions>
