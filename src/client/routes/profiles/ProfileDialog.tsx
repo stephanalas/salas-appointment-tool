@@ -63,7 +63,7 @@ const ProfileDialog = (props: DialogProps) => {
 
   useEffect(() => {
     // populate form with selected profile data
-    if (profile)
+    if (profile) {
       reset({
         firstName: profile?.firstName,
         lastName: profile?.lastName,
@@ -73,6 +73,17 @@ const ProfileDialog = (props: DialogProps) => {
         stage: profile?.stage,
         notes: profile?.notes,
       });
+    } else {
+      reset({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        industry: "",
+        stage: "PROSPECT",
+        notes: "",
+      });
+    }
   }, [profile]);
 
   const renderOptions = (options: string[]) => {
