@@ -81,7 +81,10 @@ const Profiles = () => {
             sx={{
               width: matches ? "50vw" : "10vw",
             }}
-            onClick={() => setDialogOpen(!dialogOpen)}
+            onClick={() => {
+              setSelectedProfile(null);
+              setDialogOpen(!dialogOpen);
+            }}
           >
             Add profile
           </Button>
