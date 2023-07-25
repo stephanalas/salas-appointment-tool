@@ -5,7 +5,7 @@ const GET = "GET";
 const POST = "POST";
 const PUT = "PUT";
 const DELETE = "DELETE";
-interface MessageResponse {
+export interface MessageResponse {
   error: boolean;
   message: string;
 }
@@ -36,7 +36,7 @@ export interface Profile {
 }
 
 export interface Task {
-  id: number;
+  id?: number;
   profile: Profile;
   deadline: Date | null;
   description: string;
@@ -96,7 +96,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
-    createTask: builder.mutation<MessageResponse, Partial<Task>>({
+    createTask: builder.mutation<MessageResponse, Task>({
       query: (data) => ({
         url: "tasks",
         method: POST,

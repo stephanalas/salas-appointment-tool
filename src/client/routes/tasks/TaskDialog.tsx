@@ -15,7 +15,11 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { useGetAllProfilesQuery, Profile } from "../../store/api";
+import {
+  useGetAllProfilesQuery,
+  Profile,
+  useCreateTaskMutation,
+} from "../../store/api";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
@@ -25,7 +29,7 @@ interface DialogProps {
 }
 
 interface IFormInput {
-  profile: Profile;
+  profile: Profile | null;
   urgency: string;
   deadline: Date | null;
   description: string;
@@ -35,12 +39,14 @@ interface IFormInput {
 const TaskDialog = (props: DialogProps) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [createTask] = useCreateTaskMutation();
+  // todo use isProfileLoading add spinner to autocomplete adornment
   const { data: profiles, isLoading: isProfilesLoading } =
     useGetAllProfilesQuery();
   const { open = true, onClose } = props;
   const { control, handleSubmit, reset } = useForm<IFormInput>({
     defaultValues: {
-      profile: {} as Profile,
+      profile: null,
       urgency: "LOW",
       deadline: null,
       description: "",
@@ -51,6 +57,13 @@ const TaskDialog = (props: DialogProps) => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
       console.log("Hey we are submitting", data);
+      if (data.profile) {
+        const response = await createTask({
+          ...data,
+          profile: data.profile!,
+        }).unwrap();
+        console.log(response);
+      }
       handleClose();
     } catch (error) {
       console.log(error);
