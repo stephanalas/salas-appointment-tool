@@ -1,6 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logout } from "./slices/authSlice";
 
+const GET = "GET";
+const POST = "POST";
+const PUT = "PUT";
+const DELETE = "DELETE";
 interface MessageResponse {
   error: boolean;
   message: string;
@@ -31,25 +35,32 @@ export interface Profile {
   notes: string;
 }
 
+export interface Task {
+  id: number;
+  profile: Profile;
+  deadline: Date | null;
+  description: string;
+  completed: boolean;
+}
 // TODO: CRUD FEATURE ON TASKS (PROVIDE AND INVALIDATE TAGS)
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
   }),
-  tagTypes: ["Profile"],
+  tagTypes: ["Profile", "Task"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (data) => ({
         url: "login",
-        method: "POST",
+        method: POST,
         body: data,
       }),
     }),
     logout: builder.mutation<MessageResponse, void>({
       query: () => ({
         url: "logout",
-        method: "DELETE",
+        method: DELETE,
       }),
       onQueryStarted(_arg, { dispatch }) {
         dispatch(logout());
@@ -58,7 +69,7 @@ export const api = createApi({
     createProfile: builder.mutation<MessageResponse, Partial<Profile>>({
       query: (data) => ({
         url: "profiles",
-        method: "POST",
+        method: POST,
         body: data,
       }),
       invalidatesTags: ["Profile"],
@@ -66,14 +77,14 @@ export const api = createApi({
     getAllProfiles: builder.query<Profile[], void>({
       query: () => ({
         url: "profiles",
-        method: "GET",
+        method: GET,
       }),
       providesTags: ["Profile"],
     }),
     updateProfile: builder.mutation<MessageResponse, Profile>({
       query: (data) => ({
         url: `profiles/${data.id}`,
-        method: "PUT",
+        method: PUT,
         body: data,
       }),
       invalidatesTags: ["Profile"],
@@ -81,10 +92,31 @@ export const api = createApi({
     deleteProfile: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `profiles/${id}`,
-        method: "DELETE",
+        method: DELETE,
       }),
       invalidatesTags: ["Profile"],
     }),
+    createTask: builder.mutation<MessageResponse, Partial<Task>>({
+      query: (data) => ({
+        url: "tasks",
+        method: POST,
+        body: data,
+      }),
+    }),
+    deleteTask: builder.mutation<MessageResponse, number>({
+      query: (id) => ({
+        url: `tasks/${id}`,
+        method: DELETE,
+      }),
+    }),
+    updateTask: builder.mutation<MessageResponse, Task>({
+      query: (data) => ({
+        url: `tasks/${data.id}`,
+        method: PUT,
+        body: data,
+      }),
+    }),
+    // updateTask,
   }),
 });
 
@@ -95,4 +127,7 @@ export const {
   useCreateProfileMutation,
   useDeleteProfileMutation,
   useUpdateProfileMutation,
+  useCreateTaskMutation,
+  useUpdateTaskMutation,
+  useDeleteTaskMutation,
 } = api;
