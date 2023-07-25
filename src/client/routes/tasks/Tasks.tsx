@@ -5,19 +5,27 @@ import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Profile, useGetAllProfilesQuery } from "../../store/api";
+import { Task, useGetAllTasksQuery } from "../../store/api";
 import { Skeleton } from "@mui/material";
+import TaskDialog from "./TaskDialog";
+1;
 
 const columns: GridColDef[] = [
   {
-    field: "status",
-    headerName: "Status",
+    field: "completed",
+    headerName: "Completed",
     width: 200,
   },
   {
     field: "profile",
     headerName: "Profile",
     width: 200,
+    // render different value
+    valueFormatter: (params) => {
+      const { firstName, lastName } = params.value;
+      const fullname = `${firstName} ${lastName}`;
+      return fullname;
+    },
   },
   {
     field: "urgency",
@@ -30,19 +38,21 @@ const columns: GridColDef[] = [
     width: 200,
   },
   {
-    field: "notes",
-    headerName: "Notes",
+    field: "description",
+    headerName: "Description",
     width: 300,
   },
 ];
 
 const Tasks = () => {
-  //   const [dialogOpen, setDialogOpen] = useState(false);
-  //   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data, isLoading } = useGetAllTasksQuery();
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("sm"));
   const handleRowClick: GridEventListener<"rowClick"> = (params) => {
     // setSelectedProfile(params.row);
+    setSelectedTask(params.row);
     // setDialogOpen(true);
   };
   return (
@@ -71,13 +81,24 @@ const Tasks = () => {
             sx={{
               width: matches ? "50vw" : "10vw",
             }}
+            onClick={() => {
+              setDialogOpen(true);
+            }}
           >
             Create Task
           </Button>
+          <TaskDialog
+            open={dialogOpen}
+            onClose={() => {
+              setDialogOpen(false);
+              setSelectedTask(null);
+            }}
+            task={selectedTask ? selectedTask : null}
+          />
         </Grid>
       </Grid>
       <Grid item sx={{ height: "50vh", width: "100%" }}>
-        {/* {isLoading ? (
+        {isLoading ? (
           <Skeleton
             variant="rectangular"
             width="100%"
@@ -87,9 +108,12 @@ const Tasks = () => {
             }}
           />
         ) : (
-          <DataGrid columns={columns} rows={[]} onRowClick={handleRowClick} />
-        )} */}
-        <DataGrid columns={columns} rows={[]} />
+          <DataGrid
+            columns={columns}
+            rows={data || []}
+            onRowClick={handleRowClick}
+          />
+        )}
       </Grid>
     </Grid>
   );

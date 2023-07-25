@@ -19,13 +19,15 @@ import {
   useGetAllProfilesQuery,
   Profile,
   useCreateTaskMutation,
+  Task,
 } from "../../store/api";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
+import { toast } from "react-toastify";
 interface DialogProps {
   open: boolean;
   onClose: () => void;
+  task: Task | null;
 }
 
 interface IFormInput {
@@ -43,7 +45,7 @@ const TaskDialog = (props: DialogProps) => {
   // todo use isProfileLoading add spinner to autocomplete adornment
   const { data: profiles, isLoading: isProfilesLoading } =
     useGetAllProfilesQuery();
-  const { open = true, onClose } = props;
+  const { open, onClose, task } = props;
   const { control, handleSubmit, reset } = useForm<IFormInput>({
     defaultValues: {
       profile: null,
@@ -56,13 +58,16 @@ const TaskDialog = (props: DialogProps) => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
-      console.log("Hey we are submitting", data);
-      if (data.profile) {
+      if (!task) {
+        // create
         const response = await createTask({
           ...data,
           profile: data.profile!,
         }).unwrap();
-        console.log(response);
+        if (response.error) throw response.message;
+        else toast.success(response.message);
+      } else {
+        // update
       }
       handleClose();
     } catch (error) {

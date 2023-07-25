@@ -103,6 +103,12 @@ export const api = createApi({
         body: data,
       }),
     }),
+    getAllTasks: builder.query<Task[], void>({
+      query: () => ({
+        url: "tasks",
+        method: GET,
+      }),
+    }),
     deleteTask: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `tasks/${id}`,
@@ -122,6 +128,7 @@ export const api = createApi({
 
 export const {
   useGetAllProfilesQuery,
+  useGetAllTasksQuery,
   useLoginMutation,
   useLogoutMutation,
   useCreateProfileMutation,
