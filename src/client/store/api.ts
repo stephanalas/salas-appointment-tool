@@ -1,4 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+  createApi,
+  fetchBaseQuery,
+} from "@reduxjs/toolkit/query/react";
 import { logout } from "./slices/authSlice";
 
 const GET = "GET";
@@ -42,12 +48,23 @@ export interface Task {
   description: string;
   completed: boolean;
 }
-// TODO: CRUD FEATURE ON TASKS (PROVIDE AND INVALIDATE TAGS)
+
+const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
+const baseQueryCheckToken: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  let result = await baseQuery(args, api, extraOptions);
+  const { error } = result;
+  if (error && error.data && error.data === "Forbidden") {
+    api.dispatch(logout());
+  }
+  return result;
+};
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
-  }),
+  baseQuery: baseQueryCheckToken,
   tagTypes: ["Profile", "Task"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
@@ -108,12 +125,14 @@ export const api = createApi({
         url: "tasks",
         method: GET,
       }),
+      providesTags: ["Task"],
     }),
     deleteTask: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `tasks/${id}`,
         method: DELETE,
       }),
+      invalidatesTags: ["Task"],
     }),
     updateTask: builder.mutation<MessageResponse, Task>({
       query: (data) => ({
@@ -121,8 +140,8 @@ export const api = createApi({
         method: PUT,
         body: data,
       }),
+      invalidatesTags: ["Task"],
     }),
-    // updateTask,
   }),
 });
 
