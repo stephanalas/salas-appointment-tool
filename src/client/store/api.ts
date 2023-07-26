@@ -119,6 +119,7 @@ export const api = createApi({
         method: POST,
         body: data,
       }),
+      invalidatesTags: ["Task"],
     }),
     getAllTasks: builder.query<Task[], void>({
       query: () => ({
