@@ -8,13 +8,18 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { Task, useGetAllTasksQuery } from "../../store/api";
 import { Skeleton } from "@mui/material";
 import TaskDialog from "./TaskDialog";
-1;
+import CheckIcon from "@mui/icons-material/Check";
+import { DateTime } from "luxon";
 
 const columns: GridColDef[] = [
   {
     field: "completed",
     headerName: "Completed",
-    width: 200,
+    width: 100,
+    renderCell: (params) => {
+      return params.value ? <CheckIcon /> : null;
+    },
+    align: "center",
   },
   {
     field: "profile",
@@ -36,6 +41,11 @@ const columns: GridColDef[] = [
     field: "deadline",
     headerName: "Deadline",
     width: 200,
+    valueFormatter: (params) => {
+      if (params.value) {
+        return DateTime.fromISO(params.value).toFormat("MM-dd-yyyy");
+      } else return null;
+    },
   },
   {
     field: "description",
