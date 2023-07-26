@@ -18,7 +18,3 @@ export const getUser = async (req: Request) => {
   });
   return user;
 };
-
-export default {
-  getUser,
-};
