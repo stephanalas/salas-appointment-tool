@@ -130,7 +130,7 @@ const TaskDialog = (props: DialogProps) => {
 
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
-      <DialogTitle>Add Task</DialogTitle>
+      <DialogTitle>{task ? 'Edit Task' : 'Add Task'}</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container spacing={2}>
