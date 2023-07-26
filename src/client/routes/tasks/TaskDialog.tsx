@@ -11,7 +11,6 @@ import {
   useTheme,
   useMediaQuery,
   MenuItem,
-  FormGroup,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
