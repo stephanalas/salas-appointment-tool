@@ -62,7 +62,6 @@ model Appointment {
   profile       Profile  @relation(fields: [profileId], references: [id])
   profileId     Int
   dateTime      DateTime
-  contactNumber String
   notes         String
   user          User     @relation(fields: [userId], references: [id])
   userId        Int
