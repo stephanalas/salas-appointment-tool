@@ -120,7 +120,16 @@ const Tasks = () => {
         ) : (
           <DataGrid
             columns={columns}
-            rows={data || []}
+            rows={
+              data?.map((task) => {
+                return {
+                  ...task,
+                  deadline: task.deadline
+                    ? DateTime.fromISO(task.deadline as string)
+                    : null,
+                };
+              }) || []
+            }
             onRowClick={handleRowClick}
           />
         )}

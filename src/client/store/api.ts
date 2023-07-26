@@ -45,7 +45,8 @@ export interface Profile {
 export interface Task {
   id?: number;
   profile: Profile;
-  deadline: DateTime | null;
+  // deadline could be string from responses
+  deadline: DateTime | string | null;
   urgency: string;
   description: string;
   completed: boolean;
@@ -98,6 +99,7 @@ export const api = createApi({
         url: "profiles",
         method: GET,
       }),
+
       providesTags: ["Profile"],
     }),
     updateProfile: builder.mutation<MessageResponse, Profile>({

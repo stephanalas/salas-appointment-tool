@@ -191,14 +191,9 @@ const TaskDialog = (props: DialogProps) => {
                 render={({ field: { value, onChange, ref } }) => (
                   <DatePicker
                     disablePast
-                    value={value ? value.toFormat("MM/dd/yyyy") : null}
+                    value={value}
                     inputRef={ref}
-                    onChange={(newValue) => {
-                      if (newValue) {
-                        console.log(newValue);
-                        onChange(newValue);
-                      }
-                    }}
+                    onChange={onChange}
                     label="Deadline"
                   />
                 )}
