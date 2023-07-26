@@ -44,7 +44,7 @@ export interface Profile {
 
 export interface Task {
   id?: number;
-  profile: Profile;
+  profile: Profile | null;
   // deadline could be string from responses
   deadline: DateTime | string | null;
   urgency: string;

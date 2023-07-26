@@ -46,12 +46,42 @@ taskRouter.post("/", async (req, res, next) => {
 
 taskRouter.put("/:taskId", async (req, res, next) => {
   try {
-  } catch (error) {}
+    const {
+      body: data,
+      params: { taskId },
+    } = req;
+    delete data.id;
+    await prisma.task.update({
+      where: {
+        id: +taskId,
+      },
+      data: {
+        ...data,
+        profile: {
+          connect: {
+            id: data.profile.id,
+          },
+        },
+      },
+    });
+    res.send({ error: false, message: "Task updated" });
+  } catch (error) {
+    next(error);
+  }
 });
 
 taskRouter.delete("/:taskId", async (req, res, next) => {
   try {
-  } catch (error) {}
+    const id = +req.params.taskId;
+    await prisma.task.delete({
+      where: {
+        id,
+      },
+    });
+    res.send({ error: false, message: "Task deleted" });
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default taskRouter;

@@ -21,6 +21,9 @@ import {
   Profile,
   useCreateTaskMutation,
   Task,
+  useDeleteTaskMutation,
+  useUpdateTaskMutation,
+  MessageResponse,
 } from "../../store/api";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -42,7 +45,9 @@ interface IFormInput {
 const TaskDialog = (props: DialogProps) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const [createTask] = useCreateTaskMutation();
+  const [createTask, { isLoading: createLoading }] = useCreateTaskMutation();
+  const [deleteTask, { isLoading: deleteLoading }] = useDeleteTaskMutation();
+  const [updateTask, { isLoading: updateLoading }] = useUpdateTaskMutation();
   // todo use isProfileLoading add spinner to autocomplete adornment
   const { data: profiles, isLoading: isProfilesLoading } =
     useGetAllProfilesQuery();
@@ -80,18 +85,20 @@ const TaskDialog = (props: DialogProps) => {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
+      let response: MessageResponse;
       if (!task) {
         // create
-        const response = await createTask({
+        response = await createTask({
           ...data,
           profile: data.profile!,
           deadline: data.deadline,
         }).unwrap();
-        if (response.error) throw response.message;
-        else toast.success(response.message);
       } else {
         // update
+        response = await updateTask({ id: task.id, ...data }).unwrap();
       }
+      if (response.error) throw response.message;
+      else toast.success(response.message);
       handleClose();
     } catch (error) {
       if (typeof error == "string") {
@@ -99,6 +106,22 @@ const TaskDialog = (props: DialogProps) => {
         console.log(error);
       }
     }
+    handleClose();
+  };
+  const handleDelete = async () => {
+    try {
+      if (task && task.id) {
+        const response = await deleteTask(task.id).unwrap();
+        if (response.error) throw response.message;
+        toast.success(response.message);
+      }
+    } catch (error) {
+      if (typeof error == "string") {
+        console.log(error);
+        toast.error(error);
+      }
+    }
+    handleClose();
   };
   const handleClose = () => {
     onClose();
@@ -246,8 +269,25 @@ const TaskDialog = (props: DialogProps) => {
           </Grid>
         </Grid>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Submit</Button>
+          {task && (
+            <Button
+              onClick={handleDelete}
+              children={"Delete"}
+              disabled={createLoading || updateLoading || deleteLoading}
+            />
+          )}
+          <Button
+            onClick={handleClose}
+            disabled={createLoading || updateLoading || deleteLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={createLoading || updateLoading || deleteLoading}
+          >
+            Submit
+          </Button>
         </DialogActions>
       </form>
     </Dialog>
