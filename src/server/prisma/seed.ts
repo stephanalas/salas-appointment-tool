@@ -33,7 +33,7 @@ async function main() {
       notes: "notes regarding prospect",
       tasks: {
         create: {
-          deadline: new Date("2023-06-19"),
+          deadline: null,
           urgency: "URGENT",
           userId: admin.id,
           description: "task description",
@@ -56,7 +56,7 @@ async function main() {
       notes: "notes regarding client",
       tasks: {
         create: {
-          deadline: new Date("2023-06-19"),
+          deadline: null,
           urgency: "LOW",
           userId: admin.id,
           description: "task description",

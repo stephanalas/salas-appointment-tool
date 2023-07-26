@@ -17,7 +17,7 @@ const App = () => {
   const matches = useMediaQuery(breakpoints.down("md"));
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
         <CssBaseline />
         <BootstrapNavbar />
         {!user && <Navigate to="/login" />}

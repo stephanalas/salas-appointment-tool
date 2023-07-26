@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -7,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import { DateTime } from "luxon";
 import {
   useTheme,
   useMediaQuery,
@@ -32,7 +34,7 @@ interface DialogProps {
 interface IFormInput {
   profile: Profile | null;
   urgency: string;
-  deadline: Date | null;
+  deadline: DateTime | null;
   description: string;
   completed: boolean;
 }
@@ -55,6 +57,27 @@ const TaskDialog = (props: DialogProps) => {
     },
   });
 
+  useEffect(() => {
+    // populate form with selected profile data
+    if (task) {
+      reset({
+        profile: task.profile,
+        urgency: task.urgency,
+        deadline: task.deadline,
+        description: task.description,
+        completed: task.completed,
+      });
+    } else {
+      reset({
+        profile: null,
+        urgency: "LOW",
+        deadline: null,
+        description: "",
+        completed: false,
+      });
+    }
+  }, [task]);
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
       if (!task) {
@@ -62,6 +85,7 @@ const TaskDialog = (props: DialogProps) => {
         const response = await createTask({
           ...data,
           profile: data.profile!,
+          deadline: data.deadline,
         }).unwrap();
         if (response.error) throw response.message;
         else toast.success(response.message);
@@ -70,7 +94,10 @@ const TaskDialog = (props: DialogProps) => {
       }
       handleClose();
     } catch (error) {
-      console.log(error);
+      if (typeof error == "string") {
+        toast.error(error);
+        console.log(error);
+      }
     }
   };
   const handleClose = () => {
@@ -163,9 +190,15 @@ const TaskDialog = (props: DialogProps) => {
                 name="deadline"
                 render={({ field: { value, onChange, ref } }) => (
                   <DatePicker
-                    value={value}
+                    disablePast
+                    value={value ? value.toFormat("MM/dd/yyyy") : null}
                     inputRef={ref}
-                    onChange={onChange}
+                    onChange={(newValue) => {
+                      if (newValue) {
+                        console.log(newValue);
+                        onChange(newValue);
+                      }
+                    }}
                     label="Deadline"
                   />
                 )}

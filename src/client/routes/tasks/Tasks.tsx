@@ -43,7 +43,7 @@ const columns: GridColDef[] = [
     width: 200,
     valueFormatter: (params) => {
       if (params.value) {
-        return DateTime.fromISO(params.value).toFormat("MM-dd-yyyy");
+        return DateTime.fromISO(params.value).toFormat("MM/dd/yyyy");
       } else return null;
     },
   },
@@ -63,7 +63,7 @@ const Tasks = () => {
   const handleRowClick: GridEventListener<"rowClick"> = (params) => {
     // setSelectedProfile(params.row);
     setSelectedTask(params.row);
-    // setDialogOpen(true);
+    setDialogOpen(true);
   };
   return (
     <Grid

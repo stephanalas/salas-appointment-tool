@@ -6,6 +6,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 import { logout } from "./slices/authSlice";
+import { DateTime } from "luxon";
 
 const GET = "GET";
 const POST = "POST";
@@ -44,7 +45,8 @@ export interface Profile {
 export interface Task {
   id?: number;
   profile: Profile;
-  deadline: Date | null;
+  deadline: DateTime | null;
+  urgency: string;
   description: string;
   completed: boolean;
 }
