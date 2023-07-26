@@ -33,9 +33,9 @@ taskRouter.post("/", async (req, res, next) => {
         deadline,
         urgency,
         completed,
-        profileId: profile.id,
         description,
         userId: id,
+        profileId: profile.id,
       },
     });
     res.send({ error: false, message: "Task created" });
