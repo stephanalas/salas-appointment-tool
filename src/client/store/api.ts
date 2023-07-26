@@ -52,6 +52,13 @@ export interface Task {
   completed: boolean;
 }
 
+export interface Appointment {
+  id?: number;
+  profile: Profile | null;
+  dateTime: DateTime | string | null;
+  notes: string | null
+}
+
 const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
 const baseQueryCheckToken: BaseQueryFn<
   string | FetchArgs,
@@ -147,12 +154,20 @@ export const api = createApi({
       }),
       invalidatesTags: ["Task"],
     }),
+    getAllAppointments: builder.query<Appointment[], void>({
+      query: () => ({
+        url: `appointments`,
+        method: GET
+      })
+    }) 
   }),
+
 });
 
 export const {
   useGetAllProfilesQuery,
   useGetAllTasksQuery,
+  useGetAllAppointmentsQuery,
   useLoginMutation,
   useLogoutMutation,
   useCreateProfileMutation,
