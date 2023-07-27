@@ -45,7 +45,7 @@ const AppointmentDialog = (props: DialogProps) => {
   const [updateAppointment, { isLoading: updateLoading }] =
     useUpdateAppointmentMutation();
   // todo use isProfileLoading add spinner to autocomplete adornment
-  const { data: profiles, isLoading: isProfilesLoading } =
+  const { data: profiles, isLoading: _isProfilesLoading } =
     useGetAllProfilesQuery();
   const { open, onClose, appointment } = props;
   const { control, handleSubmit, reset, resetField } = useForm<IFormInput>({
@@ -146,7 +146,7 @@ const AppointmentDialog = (props: DialogProps) => {
                     fullWidth
                     handleHomeEndKeys
                     value={value}
-                    onChange={(e, newValue) => {
+                    onChange={(_e, newValue) => {
                       if (newValue) {
                         const { phoneNumber, email } = newValue;
                         onChange(newValue);

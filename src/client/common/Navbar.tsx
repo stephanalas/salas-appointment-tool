@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../hooks";
 import { useLogoutMutation } from "../store/api";
-import { useTheme, useMediaQuery } from "@mui/material";
+// import { useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
 import AppBar from "@mui/material/AppBar";
@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const BootstrapNavbar = () => {
   const auth = useAppSelector((store) => store.auth);
   const [logout] = useLogoutMutation();
-  const { breakpoints } = useTheme();
+  // const { breakpoints } = useTheme();
   const navigate = useNavigate();
   // const matches = useMediaQuery(breakpoints);
 

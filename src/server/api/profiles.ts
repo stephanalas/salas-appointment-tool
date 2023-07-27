@@ -2,7 +2,7 @@ import express from "express";
 import prisma from "../prisma/primsa";
 const profileRouter = express.Router();
 
-profileRouter.get("/", async (req, res, next) => {
+profileRouter.get("/", async (_req, res, next) => {
   try {
     const profiles = await prisma.profile.findMany();
     res.send(profiles);

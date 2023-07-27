@@ -49,7 +49,7 @@ const TaskDialog = (props: DialogProps) => {
   const [deleteTask, { isLoading: deleteLoading }] = useDeleteTaskMutation();
   const [updateTask, { isLoading: updateLoading }] = useUpdateTaskMutation();
   // todo use isProfileLoading add spinner to autocomplete adornment
-  const { data: profiles, isLoading: isProfilesLoading } =
+  const { data: profiles, isLoading: _isProfilesLoading } =
     useGetAllProfilesQuery();
   const { open, onClose, task } = props;
   const { control, handleSubmit, reset } = useForm<IFormInput>({
@@ -151,7 +151,7 @@ const TaskDialog = (props: DialogProps) => {
                     fullWidth
                     handleHomeEndKeys
                     value={value}
-                    onChange={(e, newValue) => {
+                    onChange={(_e, newValue) => {
                       if (newValue) onChange(newValue);
                     }}
                     options={profiles || []}
@@ -260,7 +260,7 @@ const TaskDialog = (props: DialogProps) => {
                     <Checkbox
                       {...field}
                       checked={field.value}
-                      onChange={(e, checked) => field.onChange(checked)}
+                      onChange={(_e, checked) => field.onChange(checked)}
                     />
                   }
                   label="Completed"

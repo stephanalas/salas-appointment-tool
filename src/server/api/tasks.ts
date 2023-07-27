@@ -1,6 +1,5 @@
 import express from "express";
 import prisma from "../prisma/primsa";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { getUser } from "../utility";
 
 const taskRouter = express.Router();

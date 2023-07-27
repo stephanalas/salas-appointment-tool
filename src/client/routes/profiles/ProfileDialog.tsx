@@ -7,12 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMediaQuery, useTheme } from "@mui/material";
 import {
   Profile,

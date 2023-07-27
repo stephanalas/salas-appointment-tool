@@ -30,6 +30,7 @@ const Dashboard = () => {
         onClose={() => {
           setTaskDialogOpen(false);
         }}
+        task={null}
       />
     </Grid>
   );
