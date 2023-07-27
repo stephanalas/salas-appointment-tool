@@ -15,12 +15,12 @@ const App = () => {
   const user = useAppSelector((store) => store.auth.user);
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
+
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
         <CssBaseline />
         <BootstrapNavbar />
-        {!user && <Navigate to="/login" />}
         <Container disableGutters maxWidth="xl">
           <Paper
             sx={{
@@ -30,6 +30,7 @@ const App = () => {
             square
             elevation={1}
           >
+            {!user && <Navigate to="/login" />}
             <Outlet />
             <ToastContainer
               position="bottom-center"
