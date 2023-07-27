@@ -13,18 +13,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+app.use("/api", api);
 if (!process.env.VITE) {
   const frontendFiles = process.cwd() + "/dist";
   console.log(frontendFiles);
   app.use(express.static("dist"));
   app.use(express.static(frontendFiles));
   app.get("/*", (_, res) => {
-    res.send(frontendFiles + "/index.html");
+    res.type("html").sendFile(path.resolve(__dirname, "dist", "index.html"));
   });
+
   app.listen(process.env["PORT"]);
 }
 app.use(express.static(path.join(__dirname, "..", "dist", "assets")));
-
-app.use("/api", api);
 
 app.use(errorHandler);
