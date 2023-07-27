@@ -27,6 +27,7 @@ loginRouter.post("/", async (req, res, next) => {
       .cookie("access_token", token, {
         httpOnly: true,
         secure: true,
+        expires: new Date(new Date().getTime() + 60 * 60000),
       })
       .status(200)
       .json({ user });
