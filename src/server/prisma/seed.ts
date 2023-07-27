@@ -3,7 +3,10 @@ import prisma from "./primsa.ts";
 
 async function main() {
   // user
-  const hashPassword = await bcrypt.hash("1234", 10 /* salt rounds */);
+  const hashPassword = await bcrypt.hash(
+    process.env.TEST_PASSWORD!,
+    10 /* salt rounds */
+  );
   const admin = await prisma.user.upsert({
     where: {
       email: "admin@mail.com",
