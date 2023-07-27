@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import ErrorPage from "./common/error-page.tsx";
@@ -30,6 +34,14 @@ const router = createBrowserRouter([
       {
         index: true,
         path: "/",
+        loader: () => {
+          const {
+            auth: { user },
+          } = store.getState();
+          if (!user) {
+            return redirect("/login");
+          } else return null;
+        },
         element: <Dashboard />,
       },
 

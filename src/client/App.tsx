@@ -1,6 +1,5 @@
 import BootstrapNavbar from "./common/Navbar";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAppSelector } from "./hooks";
+import { Outlet } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
@@ -12,7 +11,6 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import "react-toastify/dist/ReactToastify.css";
 const App = () => {
-  const user = useAppSelector((store) => store.auth.user);
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
 
@@ -30,7 +28,6 @@ const App = () => {
             square
             elevation={1}
           >
-            {!user && <Navigate to="/login" />}
             <Outlet />
             <ToastContainer
               position="bottom-center"
