@@ -55,8 +55,9 @@ export interface Task {
 export interface Appointment {
   id?: number;
   profile: Profile | null;
+  contact: string;
   dateTime: DateTime | string | null;
-  notes: string | null
+  notes: string | null;
 }
 
 const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
@@ -75,7 +76,7 @@ const baseQueryCheckToken: BaseQueryFn<
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryCheckToken,
-  tagTypes: ["Profile", "Task"],
+  tagTypes: ["Profile", "Task", "Appointments"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (data) => ({
@@ -157,11 +158,34 @@ export const api = createApi({
     getAllAppointments: builder.query<Appointment[], void>({
       query: () => ({
         url: `appointments`,
-        method: GET
-      })
-    }) 
+        method: GET,
+      }),
+      providesTags: ["Appointments"],
+    }),
+    createAppointment: builder.mutation<MessageResponse, Appointment>({
+      query: (data) => ({
+        url: `appointments`,
+        method: POST,
+        body: data,
+      }),
+      invalidatesTags: ["Appointments"],
+    }),
+    cancelAppointment: builder.mutation<MessageResponse, number>({
+      query: (id) => ({
+        url: `appointments/${id}`,
+        method: DELETE,
+      }),
+      invalidatesTags: ["Appointments"],
+    }),
+    updateAppointment: builder.mutation<MessageResponse, Appointment>({
+      query: (data) => ({
+        url: `appointments/${data.id}`,
+        method: PUT,
+        body: data,
+      }),
+      invalidatesTags: ["Appointments"],
+    }),
   }),
-
 });
 
 export const {
@@ -176,4 +200,7 @@ export const {
   useCreateTaskMutation,
   useUpdateTaskMutation,
   useDeleteTaskMutation,
+  useCreateAppointmentMutation,
+  useCancelAppointmentMutation,
+  useUpdateAppointmentMutation,
 } = api;

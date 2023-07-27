@@ -5,9 +5,10 @@ import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import {  Appointment, useGetAllAppointmentsQuery } from "../../store/api";
+import { Appointment, useGetAllAppointmentsQuery } from "../../store/api";
 import { Skeleton } from "@mui/material";
 import { DateTime } from "luxon";
+import AppointmentDialog from "./AppointmentDialog";
 
 const columns: GridColDef[] = [
   {
@@ -15,14 +16,19 @@ const columns: GridColDef[] = [
     headerName: "Full name",
     width: 150,
     valueFormatter: (params) => {
-      const { firstName, lastName } = params.value
-      return `${firstName} ${lastName}`
-    }
+      if (params.value) {
+        const { firstName, lastName } = params.value;
+        return `${firstName} ${lastName}`;
+      } else return null;
+    },
   },
   {
     field: "dateTime",
     headerName: "dateTime",
-    width: 125,
+    width: 200,
+    valueFormatter: (params) => {
+      return params.value.toLocaleString(DateTime.DATETIME_SHORT);
+    },
   },
   {
     field: "contact",
@@ -37,7 +43,8 @@ const columns: GridColDef[] = [
 ];
 
 const Appointments = () => {
-  const [selectedAppointment , setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data, isLoading } = useGetAllAppointmentsQuery();
   const { breakpoints } = useTheme();
@@ -73,11 +80,19 @@ const Appointments = () => {
               width: matches ? "50vw" : "10vw",
             }}
             onClick={() => {
+              setSelectedAppointment(null);
               setDialogOpen(true);
             }}
           >
             Create Appointment
           </Button>
+          <AppointmentDialog
+            open={dialogOpen}
+            onClose={() => {
+              setDialogOpen(false);
+            }}
+            appointment={selectedAppointment ? selectedAppointment : null}
+          />
         </Grid>
       </Grid>
       <Grid item sx={{ height: "50vh", width: "100%" }}>
@@ -95,10 +110,14 @@ const Appointments = () => {
             columns={columns}
             rows={
               data?.map((appointment) => {
+                const { profile } = appointment;
                 return {
                   ...appointment,
-                  dateTime: appointment.dateTime
-                    ? DateTime.fromISO(appointment.dateTime as string)
+                  dateTime: DateTime.fromISO(appointment.dateTime as string),
+                  contact: profile
+                    ? profile.phoneNumber
+                      ? profile.phoneNumber
+                      : profile.email
                     : null,
                 };
               }) || []
