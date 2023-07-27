@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "main": "index.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "prisma": {
     "schema": "src/server/prisma/schema.prisma",
     "seed": "tsx src/server/prisma/seed.ts"

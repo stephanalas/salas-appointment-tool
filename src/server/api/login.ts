@@ -28,6 +28,10 @@ loginRouter.post("/", async (req, res, next) => {
         httpOnly: true,
         secure: true,
         expires: new Date(new Date().getTime() + 60 * 60000),
+        domain:
+          process.env.ENVIRONMENT == "PRODUCTION"
+            ? process.env.DOMAIN
+            : "http://localhost:5173",
       })
       .status(200)
       .json({ user });
