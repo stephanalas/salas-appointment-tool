@@ -20,7 +20,7 @@ if (!process.env.VITE) {
   app.use(express.static("dist"));
   app.use(express.static(frontendFiles));
   app.get("/*", (_, res) => {
-    res.type("html").sendFile(path.resolve(__dirname, "dist", "index.html"));
+    res.sendFile(frontendFiles + "/index.html");
   });
 
   app.listen(process.env["PORT"]);
