@@ -105,8 +105,8 @@ const TaskDialog = (props: DialogProps) => {
         toast.error(error);
         console.log(error);
       }
+      handleClose();
     }
-    handleClose();
   };
   const handleDelete = async () => {
     try {
@@ -115,13 +115,14 @@ const TaskDialog = (props: DialogProps) => {
         if (response.error) throw response.message;
         toast.success(response.message);
       }
+      handleClose();
     } catch (error) {
       if (typeof error == "string") {
         console.log(error);
         toast.error(error);
       }
+      handleClose();
     }
-    handleClose();
   };
   const handleClose = () => {
     onClose();
@@ -130,7 +131,7 @@ const TaskDialog = (props: DialogProps) => {
 
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
-      <DialogTitle>{task ? 'Edit Task' : 'Add Task'}</DialogTitle>
+      <DialogTitle>{task ? "Edit Task" : "Add Task"}</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Grid container spacing={2}>
