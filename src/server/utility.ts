@@ -1,6 +1,6 @@
 import { Request } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import prisma from "./prisma/primsa";
+import prisma from "./prisma/primsa.ts";
 interface Payload extends JwtPayload {
   id: number;
   email: string;

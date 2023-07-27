@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import prisma from "./primsa";
+import prisma from "./primsa.ts";
 
 async function main() {
   // user

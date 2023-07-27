@@ -1,9 +1,9 @@
 import express from "express";
-import loginRouter from "./login";
-import profileRouter from "./profiles";
-import { authorization } from "../middleware/authorization";
-import taskRouter from "./tasks";
-import appointmentRouter from "./appointments";
+import loginRouter from "./login.ts";
+import profileRouter from "./profiles.ts";
+import { authorization } from "../middleware/authorization.ts";
+import taskRouter from "./tasks.ts";
+import appointmentRouter from "./appointments.ts";
 const router = express.Router();
 router.use("/test", authorization, (_, res) => res.json({ greeting: "Hello" }));
 router.use("/login", loginRouter);

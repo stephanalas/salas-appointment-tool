@@ -1,6 +1,6 @@
 import express from "express";
-import prisma from "../prisma/primsa";
-import { getUser } from "../utility";
+import prisma from "../prisma/primsa.ts";
+import { getUser } from "../utility.ts";
 
 const taskRouter = express.Router();
 

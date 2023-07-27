@@ -1,5 +1,5 @@
 import express from "express";
-import prisma from "../prisma/primsa";
+import prisma from "../prisma/primsa.ts";
 const profileRouter = express.Router();
 
 profileRouter.get("/", async (_req, res, next) => {

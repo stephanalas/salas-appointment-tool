@@ -1,12 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
-import "vite/modulepreload-polyfill";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
-import api from "./api";
-import errorHandler from "./middleware/errorHandler";
+import api from "./api/index.ts";
+import errorHandler from "./middleware/errorHandler.ts";
 export const app = express();
 
 app.use(express.json());

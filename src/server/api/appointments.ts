@@ -1,6 +1,6 @@
 import express from "express";
-import { getUser } from "../utility";
-import prisma from "../prisma/primsa";
+import { getUser } from "../utility.ts";
+import prisma from "../prisma/primsa.ts";
 import { DateTime } from "luxon";
 
 const appointmentRouter = express.Router();

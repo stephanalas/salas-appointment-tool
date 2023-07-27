@@ -1,6 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import prisma from "../prisma/primsa";
+import prisma from "../prisma/primsa.ts";
 import bcrypt from "bcrypt";
 
 const loginRouter = Router();
@@ -28,10 +28,6 @@ loginRouter.post("/", async (req, res, next) => {
         httpOnly: true,
         secure: true,
         expires: new Date(new Date().getTime() + 60 * 60000),
-        domain:
-          process.env.ENVIRONMENT == "PRODUCTION"
-            ? process.env.DOMAIN
-            : "http://localhost:5173",
       })
       .status(200)
       .json({ user });
