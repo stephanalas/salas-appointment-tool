@@ -63,7 +63,7 @@ const UpcomingAppointments = () => {
       item
       container
       sx={{
-        width: matches ? "100%" : "50vw",
+        width: matches ? "100%" : "40vw",
       }}
       direction="column"
     >

@@ -24,6 +24,7 @@ const TaskWidget = (props: TaskWidgetProps) => {
         sx={{
           paddingTop: ".5rem",
           paddingBottom: ".5rem",
+          height: "13ch",
         }}
       >
         <Grid
@@ -31,6 +32,7 @@ const TaskWidget = (props: TaskWidgetProps) => {
           alignItems={"center"}
           justifyContent={"center"}
           direction={"column"}
+          spacing={1}
         >
           <Grid item>
             <Typography>todays tasks: 5</Typography>
