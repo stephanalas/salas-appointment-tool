@@ -1,6 +1,7 @@
 # General Marketing Tool
 
 The General Marketing Tool is an application designed to help users manage profiles and tasks associated with those profiles. It also offers appointment management functionality, including the ability to create and manage appointments. In addition, the application plans to implement email notifications for appointment creation, campaign management features, transmission logs for emails, and a CSV download feature in the future.
+![Alt text](image.png)![Alt text](image-1.png)![Alt text](image-2.png)
 
 ## Table of Contents
 
