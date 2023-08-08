@@ -1,5 +1,5 @@
 import BootstrapNavbar from "./common/Navbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
@@ -8,12 +8,19 @@ import theme from "./theme";
 import { ToastContainer } from "react-toastify";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import type {} from "@mui/x-date-pickers/themeAugmentation";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { useAppSelector } from "./hooks";
 const App = () => {
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
-
+  const user = useAppSelector((store) => store.auth.user);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
