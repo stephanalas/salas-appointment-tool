@@ -9,6 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { setCredentials } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 type Credentials = {
   email: string;
@@ -35,6 +36,15 @@ const Login = () => {
         dispatch(setCredentials({ user: auth.user }));
       }
     } catch (error) {
+      if (error) {
+        type LoginError = {
+          data: {
+            message: string;
+          };
+        };
+        const loginError = error as LoginError;
+        toast.error(loginError.data.message);
+      }
       console.log(error);
     }
   };
