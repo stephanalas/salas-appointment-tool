@@ -27,15 +27,18 @@ const DropzoneDialog = (props: DialogProps) => {
     maxFiles: 1,
   });
   const [parsing, setParsing] = useState(false);
-  const [data, setData] = useState();
+  const [csvData, setCSVData] = useState<unknown[]>();
 
   useEffect(() => {
     if (!parsing && acceptedFiles.length) {
       const file = acceptedFiles[0];
 
       file.text().then((result) => {
-        const jsonData = parse(result);
-        console.log("data", jsonData);
+        const { data, errors } = parse(result);
+        if (!errors.length) setCSVData(data);
+        // TODO: check for errors
+        // type out data state
+        // TODO: create confirmation view
       });
     }
   }, [parse, acceptedFiles]);
