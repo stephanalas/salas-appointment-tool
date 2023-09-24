@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -10,8 +10,8 @@ import DialogActions from "@mui/material/DialogActions";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import { useTheme, useMediaQuery } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { parse } from "papaparse";
 
 interface DialogProps {
   open: boolean;
@@ -19,24 +19,56 @@ interface DialogProps {
 }
 
 const DropzoneDialog = (props: DialogProps) => {
-  const theme = useTheme();
   const { open, onClose } = props;
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const files = acceptedFiles.map((file) => {
-    console.log("file", file);
-    return <ListItem>file</ListItem>;
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "text/csv": [],
+    },
+    maxFiles: 1,
   });
+  const [parsing, setParsing] = useState(false);
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    if (!parsing && acceptedFiles.length) {
+      const file = acceptedFiles[0];
+
+      file.text().then((result) => {
+        const jsonData = parse(result);
+        console.log("data", jsonData);
+      });
+    }
+  }, [parse, acceptedFiles]);
+
+  // const files = acceptedFiles.map((file) => {
+  //   console.log("file", file);
+  //   const reader = new FileReader();
+
+  //   return <ListItem>file</ListItem>;
+  // });
+  // drop a file
+  // save file to currentFile state
+  // parse file using papaparse
+  // check for errors
+  // if no errors
+  // make a request to server to add profiles to db
+
   return (
-    <Dialog open={open} onClose={onClose} fullScreen={fullScreen}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      sx={{
+        width: "100%",
+      }}
+      fullWidth
+    >
       <DialogTitle>Import profiles</DialogTitle>
       <DialogContent>
         <Paper
           {...getRootProps({ className: "dropzone" })}
           sx={{
             backgroundColor: "#ededed",
-            width: "20vw",
-            height: "20vh",
+            height: 250,
           }}
         >
           <Grid
@@ -53,9 +85,6 @@ const DropzoneDialog = (props: DialogProps) => {
             <DialogContentText>drag csv file or click to add</DialogContentText>
           </Grid>
         </Paper>
-        <aside>
-          <List>{files ? files : null}</List>
-        </aside>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
