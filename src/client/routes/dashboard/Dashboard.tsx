@@ -24,7 +24,11 @@ const Dashboard = () => {
         margin: matches ? 0 : "1rem",
       }}
     >
-      <Grid>
+      <Grid
+        sx={{
+          width: matches ? "100%" : "auto",
+        }}
+      >
         <Tasks setDialogOpen={() => setTaskDialogOpen(true)} />
         <Grid
           item
