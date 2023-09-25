@@ -59,6 +59,14 @@ export interface Appointment {
   dateTime: DateTime | string | null;
   notes: string | null;
 }
+export interface RowData {
+  name: string;
+  email: string;
+  phone: string;
+  industry: string;
+  stage: string;
+  notes: string;
+}
 
 const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
 const baseQueryCheckToken: BaseQueryFn<
@@ -125,6 +133,13 @@ export const api = createApi({
         method: DELETE,
       }),
       invalidatesTags: ["Profile"],
+    }),
+    importProfiles: builder.mutation<MessageResponse, RowData[]>({
+      query: (rowData) => ({
+        url: `profiles/import`,
+        method: POST,
+        body: rowData,
+      }),
     }),
     createTask: builder.mutation<MessageResponse, Task>({
       query: (data) => ({
@@ -204,4 +219,5 @@ export const {
   useCreateAppointmentMutation,
   useCancelAppointmentMutation,
   useUpdateAppointmentMutation,
+  useImportProfilesMutation,
 } = api;
