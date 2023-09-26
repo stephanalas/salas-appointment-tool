@@ -65,6 +65,7 @@ const DropzoneDialog = (props: DialogProps) => {
       }
     }
     setCSVData(rows);
+    setParsing(false);
   }
 
   function handleClose() {
@@ -102,7 +103,12 @@ const DropzoneDialog = (props: DialogProps) => {
 
       <DialogContent>
         {isLoading ? (
-          <CircularProgress />
+          <DialogContentText>
+            <Grid container justifyContent="space-between" alignItems="center">
+              <Grid item>Importing rows into profile table...</Grid>
+              <CircularProgress />
+            </Grid>
+          </DialogContentText>
         ) : csvData.length ? (
           <DialogContentText>
             File upload successful. Ready to import to profile's table?
