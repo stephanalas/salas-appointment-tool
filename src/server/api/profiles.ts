@@ -80,41 +80,35 @@ profileRouter.post("/import", async (req, res, next) => {
       phone: string;
       notes: string;
     };
-    const profiles = req.body;
-    // profiles not inserting into table properly
-    // might be race condition
-    // find better way to insert asynchronously
-    // Promise.all might be the issue try async for loop
+    const profiles: ProfileData[] = req.body;
 
-    Promise.all(
-      profiles.map((profile: ProfileData) => {
-        const [firstName, lastName] = profile.name.split(" ");
-        const { industry, notes, stage, email } = profile;
+    for (const profile of profiles) {
+      const [firstName, lastName] = profile.name.split(" ");
+      const { industry, notes, stage, email } = profile;
+      await prisma.profile.upsert({
+        where: {
+          email: profile.email,
+        },
+        update: {
+          firstName,
+          lastName,
+          phoneNumber: profile.phone,
+          industry,
+          notes,
+          stage,
+        },
+        create: {
+          firstName,
+          lastName,
+          email,
+          phoneNumber: profile.phone,
+          industry,
+          notes,
+          stage,
+        },
+      });
+    }
 
-        return prisma.profile.upsert({
-          where: {
-            email: profile.email,
-          },
-          update: {
-            firstName,
-            lastName,
-            phoneNumber: profile.phone,
-            industry,
-            notes,
-            stage,
-          },
-          create: {
-            firstName,
-            lastName,
-            email,
-            phoneNumber: profile.phone,
-            industry,
-            notes,
-            stage,
-          },
-        });
-      })
-    );
     res.send({ message: "Profiles successfully imported", error: false });
   } catch (error) {
     next(error);
