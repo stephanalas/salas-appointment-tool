@@ -64,8 +64,6 @@ profileRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
-// TODO: add profile import put route
-
 profileRouter.post("/import", async (req, res, next) => {
   try {
     enum Stage {

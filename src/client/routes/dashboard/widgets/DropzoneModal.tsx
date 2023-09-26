@@ -86,8 +86,6 @@ const DropzoneDialog = (props: DialogProps) => {
     } catch (error) {
       console.log(error);
     }
-    // TODO:
-    // handle response from server with react toastify
   }
 
   return (

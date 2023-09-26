@@ -48,7 +48,6 @@ const TaskDialog = (props: DialogProps) => {
   const [createTask, { isLoading: createLoading }] = useCreateTaskMutation();
   const [deleteTask, { isLoading: deleteLoading }] = useDeleteTaskMutation();
   const [updateTask, { isLoading: updateLoading }] = useUpdateTaskMutation();
-  // todo use isProfileLoading add spinner to autocomplete adornment
   const { data: profiles, isLoading: _isProfilesLoading } =
     useGetAllProfilesQuery();
   const { open, onClose, task } = props;
