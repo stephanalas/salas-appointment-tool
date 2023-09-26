@@ -66,4 +66,59 @@ profileRouter.delete("/:id", async (req, res, next) => {
 
 // TODO: add profile import put route
 
+profileRouter.post("/import", async (req, res, next) => {
+  try {
+    enum Stage {
+      PROSPECT = "PROSPECT",
+      CLIENT = "CLIENT",
+    }
+    type ProfileData = {
+      name: string;
+      email: string;
+      industry: string;
+      stage: Stage;
+      phone: string;
+      notes: string;
+    };
+    const profiles = req.body;
+    // profiles not inserting into table properly
+    // might be race condition
+    // find better way to insert asynchronously
+    // Promise.all might be the issue try async for loop
+
+    Promise.all(
+      profiles.map((profile: ProfileData) => {
+        const [firstName, lastName] = profile.name.split(" ");
+        const { industry, notes, stage, email } = profile;
+
+        return prisma.profile.upsert({
+          where: {
+            email: profile.email,
+          },
+          update: {
+            firstName,
+            lastName,
+            phoneNumber: profile.phone,
+            industry,
+            notes,
+            stage,
+          },
+          create: {
+            firstName,
+            lastName,
+            email,
+            phoneNumber: profile.phone,
+            industry,
+            notes,
+            stage,
+          },
+        });
+      })
+    );
+    res.send({ message: "Profiles successfully imported", error: false });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default profileRouter;
