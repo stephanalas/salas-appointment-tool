@@ -12,7 +12,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { parse } from "papaparse";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
-import { RowData } from "../../../store/api";
+import { RowData, useImportProfilesMutation } from "../../../store/api";
 
 interface DialogProps {
   open: boolean;
@@ -21,6 +21,7 @@ interface DialogProps {
 
 const DropzoneDialog = (props: DialogProps) => {
   const { open, onClose } = props;
+  const [importProfiles, { isLoading }] = useImportProfilesMutation();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: {
       "text/csv": [],
@@ -71,10 +72,20 @@ const DropzoneDialog = (props: DialogProps) => {
     setCSVData([]);
     setParsing(false);
   }
-  function handleSubmit() {
+  async function handleSubmit() {
     console.log("submitting data", csvData);
+    try {
+      if (csvData.length) {
+        const response = await importProfiles(csvData).unwrap();
+        if (response.message) {
+          handleClose();
+          toast.success(response.message);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
     // TODO:
-    // use import profile mutation
     // handle response from server with react toastify
   }
 
@@ -88,8 +99,11 @@ const DropzoneDialog = (props: DialogProps) => {
       fullWidth
     >
       <DialogTitle>Import profiles</DialogTitle>
+
       <DialogContent>
-        {csvData.length ? (
+        {isLoading ? (
+          <CircularProgress />
+        ) : csvData.length ? (
           <DialogContentText>
             File upload successful. Ready to import to profile's table?
           </DialogContentText>
@@ -127,7 +141,11 @@ const DropzoneDialog = (props: DialogProps) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button type="submit" disabled={!csvData.length} onClick={handleSubmit}>
+        <Button
+          type="submit"
+          disabled={!csvData.length || isLoading}
+          onClick={handleSubmit}
+        >
           Submit
         </Button>
       </DialogActions>
