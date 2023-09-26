@@ -140,6 +140,7 @@ export const api = createApi({
         method: POST,
         body: rowData,
       }),
+      invalidatesTags: ["Profile"],
     }),
     createTask: builder.mutation<MessageResponse, Task>({
       query: (data) => ({
