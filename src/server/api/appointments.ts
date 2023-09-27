@@ -36,8 +36,17 @@ appointmentRouter.post("/", async (req, res, next) => {
     const data = req.body;
     const { id } = await getUser(req);
     // send email notification
+    // status is sent if rejected array empty, pending null and accepted includes profile email
+    // sentTime should be DateTime when sendMail completes
+    // transmission type is based on profile stage
+    // isAppointment should be true
+    // responsed? take this out
+    // body should be text of message object
+    // associate profile
+    // campaign may need to be optional on transmissions
+
     const { notes, profile, dateTime } = data;
-    await prisma.appointment.create({
+    const appointment = await prisma.appointment.create({
       data: {
         notes,
         userId: id,
