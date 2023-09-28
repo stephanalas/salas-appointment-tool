@@ -8,6 +8,9 @@ type TaskWidgetProps = {
   setDialogOpen: () => void;
 };
 
+// TODO: task widget should get accurate count of tasks and urgent tasks
+// setup rtk hook
+// styling maybe use a circle progress bar to show task as well. if 0 task progress bar is filled
 const TaskWidget = (props: TaskWidgetProps) => {
   const { setDialogOpen } = props;
   const { breakpoints } = useTheme();
