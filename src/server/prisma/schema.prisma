@@ -100,8 +100,8 @@ model Transmission {
   body             String
   profile          Profile            @relation(fields: [profileId], references: [id])
   profileId        Int
-  campaign         Campaign           @relation(fields: [campaignId], references: [id])
-  campaignId       Int
+  campaign         Campaign?          @relation(fields: [campaignId], references: [id])
+  campaignId       Int?
 }
 
 enum TransmissionStatus {
