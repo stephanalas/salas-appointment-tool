@@ -11,6 +11,10 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { useAppSelector } from "./hooks";
+
+// TODO: Custom loading component might be a good idea. input what data you want to display and fit it in a dialog
+// most actions are held within a dialog anyway
+
 const App = () => {
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
