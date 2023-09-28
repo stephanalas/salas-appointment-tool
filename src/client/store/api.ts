@@ -67,7 +67,7 @@ export interface RowData {
   stage: string;
   notes: string;
 }
-
+// TODO: implement getAllTransmission query, provide tags and invalidate
 const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
 const baseQueryCheckToken: BaseQueryFn<
   string | FetchArgs,
