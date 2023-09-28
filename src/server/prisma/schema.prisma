@@ -96,7 +96,6 @@ model Transmission {
   sentDateTime     DateTime
   transmissionType Stage              @default(CUSTOM)
   isAppointment    Boolean
-  body             String
   profile          Profile            @relation(fields: [profileId], references: [id])
   profileId        Int
   campaign         Campaign?          @relation(fields: [campaignId], references: [id])
