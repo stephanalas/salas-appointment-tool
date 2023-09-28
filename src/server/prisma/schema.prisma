@@ -93,7 +93,7 @@ model Campaign {
 model Transmission {
   id               Int                @id @default(autoincrement())
   status           TransmissionStatus
-  sentTime         DateTime
+  sentDateTime     DateTime
   transmissionType Stage              @default(CUSTOM)
   isAppointment    Boolean
   body             String
