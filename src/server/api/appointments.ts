@@ -2,7 +2,7 @@ import express from "express";
 import { getUser } from "../utility.ts";
 import prisma from "../prisma/primsa.ts";
 import { DateTime } from "luxon";
-
+import mailer from "../mailer.ts";
 const appointmentRouter = express.Router();
 
 appointmentRouter.get("/", async (req, res, next) => {
@@ -34,16 +34,7 @@ appointmentRouter.get("/", async (req, res, next) => {
 appointmentRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
-    const { id } = await getUser(req);
-    // send email notification
-    // status is sent if rejected array empty, pending null and accepted includes profile email
-    // sentTime should be DateTime when sendMail completes
-    // transmission type is based on profile stage
-    // isAppointment should be true
-    // responsed? take this out
-    // body should be text of message object
-    // associate profile
-    // campaign may need to be optional on transmissions
+    const { id, email, name } = await getUser(req);
 
     const { notes, profile, dateTime } = data;
     const appointment = await prisma.appointment.create({
@@ -54,6 +45,41 @@ appointmentRouter.post("/", async (req, res, next) => {
         dateTime,
       },
     });
+    if (appointment) {
+      // send email
+      // date time formating on message object
+      const message = {
+        from: process.env.EMAIL_FROM,
+        to: profile.email,
+        subject: "Appointment Confirmation",
+        html: `
+        <h4>Appointment Details</h4>
+        <p> You have an appointment with ${name}</p>
+        <p>date: ${appointment.dateTime}</p>
+        <p>time: ${appointment.dateTime}</p>
+        <p>Please email ${email} if you need to reschedule or for any questions</p>
+        `,
+      };
+      const mailResponse = await mailer.sendMail(message);
+
+      if (mailResponse) {
+        const { accepted, pending, rejected } = mailResponse;
+
+        const status =
+          accepted.includes(profile.email) && !pending && !rejected.length;
+
+        const transmission = await prisma.transmission.create({
+          data: {
+            status: status ? "SUCCESS" : "FAILED",
+            sentDateTime: DateTime.now().toISO()!,
+            transmissionType: profile.stage,
+            isAppointment: true,
+            profileId: profile.id,
+          },
+        });
+        console.log("Transmission Created: ", transmission);
+      }
+    }
     res.send({ error: false, message: "Appointment created" });
   } catch (error) {
     next(error);
