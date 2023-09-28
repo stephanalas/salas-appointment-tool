@@ -35,6 +35,11 @@ interface IFormInput {
   notes: string | null;
 }
 
+// TODO: create a loading state after the appointmen has been created. email is working
+// check on toast notification after appointment creation
+// change contact to email address instead of phone number
+// description should also be changed to notes
+//
 const AppointmentDialog = (props: DialogProps) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
