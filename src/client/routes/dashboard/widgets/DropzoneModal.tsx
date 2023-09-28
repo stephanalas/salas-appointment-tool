@@ -19,6 +19,8 @@ interface DialogProps {
   onClose: () => void;
 }
 
+// TODO: give feed back on file that is uploaded. maybe its missing import row data
+
 const DropzoneDialog = (props: DialogProps) => {
   const { open, onClose } = props;
   const [importProfiles, { isLoading }] = useImportProfilesMutation();
