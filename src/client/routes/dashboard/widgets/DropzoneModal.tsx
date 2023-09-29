@@ -12,7 +12,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { parse } from "papaparse";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
-import { RowData, useImportProfilesMutation } from "../../../store/api";
+import { ProfileRowData, useImportProfilesMutation } from "../../../store/api";
 
 interface DialogProps {
   open: boolean;
@@ -31,7 +31,7 @@ const DropzoneDialog = (props: DialogProps) => {
     maxFiles: 1,
   });
   const [parsing, setParsing] = useState(false);
-  const [csvData, setCSVData] = useState<RowData[]>([]);
+  const [csvData, setCSVData] = useState<ProfileRowData[]>([]);
 
   useEffect(() => {
     if (!parsing && acceptedFiles.length) {
@@ -52,7 +52,7 @@ const DropzoneDialog = (props: DialogProps) => {
 
   function formatData(data: unknown[]) {
     // check for empty rows
-    const createRow = (data: RowData) => ({
+    const createRow = (data: ProfileRowData) => ({
       ...data,
     });
     // [name, email, phone, industry, stage, notes]
