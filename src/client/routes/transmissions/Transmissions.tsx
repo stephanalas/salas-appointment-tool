@@ -5,7 +5,34 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetAllTransmissionsQuery } from "../../store/api";
 
 const columns: GridColDef[] = [
-  // rows here
+  {
+    field: "id",
+    headerName: "Id",
+  },
+  {
+    field: "sentTo",
+    headerName: "Sent To",
+  },
+  {
+    field: "isAppointment",
+    headerName: "Appointment",
+  },
+  {
+    field: "transmissionType",
+    headerName: "Stage",
+  },
+  {
+    field: "date",
+    headerName: "Date",
+  },
+  {
+    field: "time",
+    headerName: "Time",
+  },
+  {
+    field: "status",
+    headerName: "Status",
+  },
 ];
 
 const Transmissions = () => {
@@ -44,7 +71,7 @@ const Transmissions = () => {
         ) : (
           <DataGrid
             columns={columns}
-            rows={[]} // rows need to be transform for columns in api
+            rows={data || []} // rows need to be transform for columns in api
             // onRowClick={handleRowClick}
           />
         )}
