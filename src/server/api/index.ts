@@ -4,12 +4,14 @@ import profileRouter from "./profiles.ts";
 import { authorization } from "../middleware/authorization.ts";
 import taskRouter from "./tasks.ts";
 import appointmentRouter from "./appointments.ts";
+import transmissionRouter from "./transmissions.ts";
 const router = express.Router();
 router.use("/test", authorization, (_, res) => res.json({ greeting: "Hello" }));
 router.use("/login", loginRouter);
 router.use("/profiles", authorization, profileRouter);
 router.use("/tasks", authorization, taskRouter);
 router.use("/appointments", authorization, appointmentRouter);
+router.use("/transmissions", authorization, transmissionRouter);
 router.delete("/logout", (_req, res, _next) => {
   res
     .clearCookie("access_token")
