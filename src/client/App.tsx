@@ -14,6 +14,7 @@ import { useAppSelector } from "./hooks";
 
 // TODO: Custom loading component might be a good idea. input what data you want to display and fit it in a dialog
 // most actions are held within a dialog anyway
+// TODO: tables share common setup. a better way to code it would be to setup a TableContainer component and pass the necessary components to it.
 
 const App = () => {
   const { breakpoints } = useTheme();
