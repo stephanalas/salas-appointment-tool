@@ -49,7 +49,6 @@ const AppointmentDialog = (props: DialogProps) => {
     useCancelAppointmentMutation();
   const [updateAppointment, { isLoading: updateLoading }] =
     useUpdateAppointmentMutation();
-  // todo use isProfileLoading add spinner to autocomplete adornment
   const { data: profiles, isLoading: _isProfilesLoading } =
     useGetAllProfilesQuery();
   const { open, onClose, appointment } = props;
