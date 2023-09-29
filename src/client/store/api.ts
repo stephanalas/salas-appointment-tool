@@ -63,15 +63,15 @@ enum TransmissionStatus {
   SUCCESS,
   FAILED,
 }
-export interface Transmission {
+
+interface Transmission {
   id: number;
-  status: TransmissionStatus;
-  sentDateTime: DateTime;
-  transmissionType: string; // stage enum
+  sentTo: string;
   isAppointment: boolean;
-  profile: Profile;
-  profileId: number;
-  campaignId?: number;
+  transmissionType: string;
+  date: string;
+  time: string;
+  status: TransmissionStatus;
 }
 
 export interface ProfileRowData {
@@ -216,7 +216,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Appointments", "Transmissions"],
     }),
-    getAllTransmissions: builder.query<Transmission, void>({
+    getAllTransmissions: builder.query<Transmission[], void>({
       query: () => ({
         url: "transmissions",
         method: GET,
