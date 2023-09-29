@@ -38,7 +38,7 @@ export interface Profile {
   email: string;
   phoneNumber: string;
   industry: string;
-  stage: string;
+  stage: string; // enum CLIENT, PROSPECT
   notes: string;
 }
 
@@ -59,7 +59,22 @@ export interface Appointment {
   dateTime: DateTime | string | null;
   notes: string | null;
 }
-export interface RowData {
+enum TransmissionStatus {
+  SUCCESS,
+  FAILED,
+}
+export interface Transmission {
+  id: number;
+  status: TransmissionStatus;
+  sentDateTime: DateTime;
+  transmissionType: string; // stage enum
+  isAppointment: boolean;
+  profile: Profile;
+  profileId: number;
+  campaignId?: number;
+}
+
+export interface ProfileRowData {
   name: string;
   email: string;
   phone: string;
@@ -67,7 +82,7 @@ export interface RowData {
   stage: string;
   notes: string;
 }
-// TODO: implement getAllTransmission query, provide tags and invalidate
+
 const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
 const baseQueryCheckToken: BaseQueryFn<
   string | FetchArgs,
@@ -84,7 +99,7 @@ const baseQueryCheckToken: BaseQueryFn<
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryCheckToken,
-  tagTypes: ["Profile", "Task", "Appointments"],
+  tagTypes: ["Profile", "Task", "Appointments", "Transmissions"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (data) => ({
@@ -133,7 +148,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
-    importProfiles: builder.mutation<MessageResponse, RowData[]>({
+    importProfiles: builder.mutation<MessageResponse, ProfileRowData[]>({
       query: (rowData) => ({
         url: `profiles/import`,
         method: POST,
@@ -184,14 +199,14 @@ export const api = createApi({
         method: POST,
         body: data,
       }),
-      invalidatesTags: ["Appointments"],
+      invalidatesTags: ["Appointments", "Transmissions"],
     }),
     cancelAppointment: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `appointments/${id}`,
         method: DELETE,
       }),
-      invalidatesTags: ["Appointments"],
+      invalidatesTags: ["Appointments", "Transmissions"],
     }),
     updateAppointment: builder.mutation<MessageResponse, Appointment>({
       query: (data) => ({
@@ -199,7 +214,14 @@ export const api = createApi({
         method: PUT,
         body: data,
       }),
-      invalidatesTags: ["Appointments"],
+      invalidatesTags: ["Appointments", "Transmissions"],
+    }),
+    getAllTransmissions: builder.query<Transmission, void>({
+      query: () => ({
+        url: "transmissions",
+        method: GET,
+      }),
+      providesTags: ["Transmissions"],
     }),
   }),
 });
@@ -208,6 +230,7 @@ export const {
   useGetAllProfilesQuery,
   useGetAllTasksQuery,
   useGetAllAppointmentsQuery,
+  useGetAllTransmissionsQuery,
   useLoginMutation,
   useLogoutMutation,
   useCreateProfileMutation,
