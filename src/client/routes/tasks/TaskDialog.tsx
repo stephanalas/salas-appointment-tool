@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
@@ -282,6 +280,7 @@ const TaskDialog = (props: DialogProps) => {
         </Button>
         <Button
           type="submit"
+          variant="contained"
           disabled={createLoading || updateLoading || deleteLoading}
         >
           Submit

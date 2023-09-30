@@ -265,6 +265,7 @@ const AppointmentDialog = (props: DialogProps) => {
         </Button>
         <Button
           type="submit"
+          variant="contained"
           disabled={createLoading || updateLoading || cancelLoading}
         >
           Submit
