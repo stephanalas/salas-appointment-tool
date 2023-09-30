@@ -113,6 +113,8 @@ appointmentRouter.put("/:appointmentId", async (req, res, next) => {
         },
       },
     });
+    // TODO: send email when appointment is updated
+
     res.send({ error: false, message: "Appointment updated" });
   } catch (error) {
     next(error);

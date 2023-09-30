@@ -64,11 +64,11 @@ const AppointmentDialog = (props: DialogProps) => {
   useEffect(() => {
     // populate form with selected profile data
     if (appointment && appointment.profile) {
-      const { phoneNumber, email } = appointment.profile;
+      const { email } = appointment.profile;
       reset({
         profile: appointment.profile,
         dateTime: appointment.dateTime,
-        contact: phoneNumber ? phoneNumber : email,
+        contact: email,
         notes: appointment.notes,
       });
     } else {
@@ -152,10 +152,10 @@ const AppointmentDialog = (props: DialogProps) => {
                     value={value}
                     onChange={(_e, newValue) => {
                       if (newValue) {
-                        const { phoneNumber, email } = newValue;
+                        const { email } = newValue;
                         onChange(newValue);
                         resetField("contact", {
-                          defaultValue: phoneNumber ? phoneNumber : email,
+                          defaultValue: email,
                         });
                       }
                     }}
