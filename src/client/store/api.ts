@@ -171,6 +171,20 @@ export const api = createApi({
       }),
       providesTags: ["Task"],
     }),
+    getUncompleteTaskCount: builder.query<{ count: number }, void>({
+      query: () => ({
+        url: "tasks/uncompletedCount",
+        method: GET,
+      }),
+      providesTags: ["Task"],
+    }),
+    getUrgentTaskCount: builder.query<{ count: number }, void>({
+      query: () => ({
+        url: "tasks/urgentCount",
+        method: GET,
+      }),
+      providesTags: ["Task"],
+    }),
     deleteTask: builder.mutation<MessageResponse, number>({
       query: (id) => ({
         url: `tasks/${id}`,
@@ -231,6 +245,8 @@ export const {
   useGetAllTasksQuery,
   useGetAllAppointmentsQuery,
   useGetAllTransmissionsQuery,
+  useGetUncompleteTaskCountQuery,
+  useGetUrgentTaskCountQuery,
   useLoginMutation,
   useLogoutMutation,
   useCreateProfileMutation,
