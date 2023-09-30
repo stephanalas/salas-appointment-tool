@@ -53,7 +53,6 @@ model Profile {
   stage         Stage
   tasks         Task[]
   appointments  Appointment[]
-  campaigns     Campaign[]
   transmissions Transmission[]
 }
 
@@ -67,29 +66,6 @@ model Appointment {
   userId    Int
 }
 
-model Package {
-  id           Int     @id @default(autoincrement())
-  title        String
-  description  String
-  location     String
-  price        Int
-  Genre        String
-  allInclusive Boolean
-  groups       Boolean
-}
-
-model Campaign {
-  id                 Int            @id @default(autoincrement())
-  subject            String
-  body               String
-  recurring          Boolean
-  sendDateTime       DateTime
-  active             Boolean
-  emailList          String
-  campaignRecipients Profile[]
-  transmissions      Transmission[]
-}
-
 model Transmission {
   id               Int                @id @default(autoincrement())
   status           TransmissionStatus
@@ -98,8 +74,6 @@ model Transmission {
   isAppointment    Boolean
   profile          Profile            @relation(fields: [profileId], references: [id])
   profileId        Int
-  campaign         Campaign?          @relation(fields: [campaignId], references: [id])
-  campaignId       Int?
 }
 
 enum TransmissionStatus {
