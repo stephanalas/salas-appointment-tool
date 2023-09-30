@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Tasks from "./widgets/TaskWidget";
 import UpcomingAppointments from "./widgets/UpcomingAppointments";
-import RecentCampaigns from "./widgets/RecentCampaigns";
+import Calendar from "./widgets/Calendar";
 import TaskDialog from "../tasks/TaskDialog";
 
 import Grid from "@mui/material/Grid";
@@ -50,7 +50,7 @@ const Dashboard = () => {
         </Grid>
       </Grid>
       <UpcomingAppointments />
-      <RecentCampaigns />
+      <Calendar />
       <TaskDialog
         open={taskDialogOpen}
         onClose={() => {

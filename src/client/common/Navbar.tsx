@@ -17,9 +17,7 @@ import { useNavigate } from "react-router-dom";
 const BootstrapNavbar = () => {
   const auth = useAppSelector((store) => store.auth);
   const [logout] = useLogoutMutation();
-  // const { breakpoints } = useTheme();
   const navigate = useNavigate();
-  // const matches = useMediaQuery(breakpoints);
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -38,7 +36,6 @@ const BootstrapNavbar = () => {
     "Tasks",
     "Profiles",
     "Appointments",
-    "Campaigns",
     "Transmissions",
     "Log out",
   ];
@@ -135,24 +132,6 @@ const BootstrapNavbar = () => {
         </Container>
       </AppBar>
     </Box>
-    // <Navbar expand="lg" className="bg-body-tertiary">
-    //   <Container>
-    //     <Navbar.Brand href="/">Gen-Marketing-Tool</Navbar.Brand>
-    //     <Navbar.Toggle aria-controls="navbar" />
-    //     <Navbar.Collapse id="navbar">
-    //       {auth.user && auth.user.id && (
-    //         <Nav>
-    //           <Nav.Link>Dashboard</Nav.Link>
-    //           <Nav.Link>Appointments</Nav.Link>
-    //           <Nav.Link>Profiles</Nav.Link>
-    //           <Nav.Link>Campaigns</Nav.Link>
-    //           <Nav.Link>Transmissions</Nav.Link>
-    //           <Nav.Link onClick={handleLogout}>Log out</Nav.Link>
-    //         </Nav>
-    //       )}
-    //     </Navbar.Collapse>
-    //   </Container>
-    // </Navbar>
   );
 };
 
