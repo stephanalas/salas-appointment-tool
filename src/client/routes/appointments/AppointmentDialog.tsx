@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
@@ -22,6 +20,7 @@ import {
 
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { toast } from "react-toastify";
+import DialogContainer from "../../common/DialogContainer";
 interface DialogProps {
   open: boolean;
   onClose: () => void;
@@ -126,157 +125,162 @@ const AppointmentDialog = (props: DialogProps) => {
     reset();
   };
 
-  return (
-    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
-      <DialogTitle>
-        {appointment ? "Edit Appointment" : "Add Appointment"}
-      </DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item width={"100%"}>
-              <Controller
-                name="profile"
-                control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({
-                  field: { onChange, value, ...field },
-                  fieldState,
-                }) => (
-                  <Autocomplete
-                    {...field}
-                    fullWidth
-                    handleHomeEndKeys
-                    value={value}
-                    onChange={(_e, newValue) => {
-                      if (newValue) {
-                        const { email } = newValue;
-                        onChange(newValue);
-                        resetField("contact", {
-                          defaultValue: email,
-                        });
+  const children = (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item width={"100%"}>
+            <Controller
+              name="profile"
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({
+                field: { onChange, value, ...field },
+                fieldState,
+              }) => (
+                <Autocomplete
+                  {...field}
+                  fullWidth
+                  handleHomeEndKeys
+                  value={value}
+                  onChange={(_e, newValue) => {
+                    if (newValue) {
+                      const { email } = newValue;
+                      onChange(newValue);
+                      resetField("contact", {
+                        defaultValue: email,
+                      });
+                    }
+                  }}
+                  options={profiles || []}
+                  renderOption={(props, option) => (
+                    <MenuItem {...props} key={option.id}>
+                      {`${option.firstName} ${option.lastName}`}
+                    </MenuItem>
+                  )}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id == value.id
+                  }
+                  getOptionLabel={(option) =>
+                    `${option.firstName} ${option.lastName}`
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Profile"
+                      inputRef={field.ref}
+                      helperText={
+                        fieldState.error
+                          ? "Select a profile to associate with task"
+                          : null
                       }
-                    }}
-                    options={profiles || []}
-                    renderOption={(props, option) => (
-                      <MenuItem {...props} key={option.id}>
-                        {`${option.firstName} ${option.lastName}`}
-                      </MenuItem>
-                    )}
-                    isOptionEqualToValue={(option, value) =>
-                      option.id == value.id
-                    }
-                    getOptionLabel={(option) =>
-                      `${option.firstName} ${option.lastName}`
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Profile"
-                        inputRef={field.ref}
-                        helperText={
-                          fieldState.error
-                            ? "Select a profile to associate with task"
-                            : null
-                        }
-                        error={!!fieldState.error}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid
-              item
-              container
-              justifyContent={"space-between"}
-              rowGap={fullScreen ? 2 : 0}
-            >
-              <Controller
-                control={control}
-                name="contact"
-                rules={{
-                  required: true,
-                }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="contact"
-                    inputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="dateTime"
-                rules={{
-                  required: true,
-                }}
-                render={({ field: { value, onChange, ref } }) => (
-                  <DateTimePicker
-                    disablePast
-                    value={value}
-                    inputRef={ref}
-                    onChange={onChange}
-                    label="DateTime"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item width={"100%"}>
-              <Controller
-                control={control}
-                name="notes"
-                rules={{
-                  required: true,
-                }}
-                render={({ field, fieldState }) => (
-                  <TextField
-                    {...field}
-                    label="Description"
-                    multiline
-                    helperText={
-                      fieldState.error
-                        ? "Missing task description. What are we doing?"
-                        : null
-                    }
-                    error={!!fieldState.error}
-                    rows={4}
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
+                      error={!!fieldState.error}
+                    />
+                  )}
+                />
+              )}
+            />
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          {appointment && (
-            <Button
-              onClick={handleDelete}
-              disabled={createLoading || updateLoading || cancelLoading}
-            >
-              Delete
-            </Button>
-          )}
+          <Grid
+            item
+            container
+            justifyContent={"space-between"}
+            rowGap={fullScreen ? 2 : 0}
+          >
+            <Controller
+              control={control}
+              name="contact"
+              rules={{
+                required: true,
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="contact"
+                  inputProps={{
+                    readOnly: true,
+                  }}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="dateTime"
+              rules={{
+                required: true,
+              }}
+              render={({ field: { value, onChange, ref } }) => (
+                <DateTimePicker
+                  disablePast
+                  value={value}
+                  inputRef={ref}
+                  onChange={onChange}
+                  label="DateTime"
+                />
+              )}
+            />
+          </Grid>
+          <Grid item width={"100%"}>
+            <Controller
+              control={control}
+              name="notes"
+              rules={{
+                required: true,
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Description"
+                  multiline
+                  helperText={
+                    fieldState.error
+                      ? "Missing task description. What are we doing?"
+                      : null
+                  }
+                  error={!!fieldState.error}
+                  rows={4}
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        {appointment && (
           <Button
-            onClick={handleClose}
+            onClick={handleDelete}
             disabled={createLoading || updateLoading || cancelLoading}
           >
-            Cancel
+            Delete
           </Button>
-          <Button
-            type="submit"
-            disabled={createLoading || updateLoading || cancelLoading}
-          >
-            Submit
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+        )}
+        <Button
+          onClick={handleClose}
+          disabled={createLoading || updateLoading || cancelLoading}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          disabled={createLoading || updateLoading || cancelLoading}
+        >
+          Submit
+        </Button>
+      </DialogActions>
+    </form>
+  );
+
+  return (
+    <DialogContainer
+      children={children}
+      handleClose={handleClose}
+      label="Appointment"
+      open={open}
+      selectedItem={appointment}
+    />
   );
 };
 

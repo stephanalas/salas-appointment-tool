@@ -1,14 +1,11 @@
 import { useEffect } from "react";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useMediaQuery, useTheme } from "@mui/material";
 import {
   Profile,
   useCreateProfileMutation,
@@ -17,6 +14,7 @@ import {
 } from "../../store/api";
 
 import { toast } from "react-toastify";
+import DialogContainer from "../../common/DialogContainer";
 
 type DialogProps = {
   open: boolean;
@@ -42,8 +40,6 @@ const ProfileDialog = (props: DialogProps) => {
     useDeleteProfileMutation();
   const [updateProfile, { isLoading: isUpdateLoading }] =
     useUpdateProfileMutation();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { control, reset, handleSubmit } = useForm({
     defaultValues: {
       firstName: "",
@@ -134,166 +130,163 @@ const ProfileDialog = (props: DialogProps) => {
     reset();
   };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      fullWidth={true}
-      fullScreen={fullScreen}
-    >
-      <DialogTitle>
-        {profile
-          ? `Edit ${profile.firstName} ${profile.lastName}`
-          : "Add Profile"}
-      </DialogTitle>
+  const children = (
+    <form onSubmit={handleSubmit(onSubmit)}>
       <DialogContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container justifyContent={"space-around"}>
-            <Controller
-              name={`firstName`}
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="First name"
-                  helperText={error ? "Missing first name" : null}
-                  error={!!error}
-                />
-              )}
-            />
-            <Controller
-              name="lastName"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  label="Last name"
-                  helperText={error ? "Missing last name" : null}
-                  margin="dense"
-                  error={!!error}
-                />
-              )}
-            />
-          </Grid>
-          <Grid container justifyContent={"space-around"}>
-            <Controller
-              name="email"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  label="Email"
-                  margin="dense"
-                  helperText={error ? "Missing Email" : null}
-                  error={!!error}
-                />
-              )}
-            />
-            <Controller
-              name="phoneNumber"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  margin="dense"
-                  label="Phone number"
-                  helperText={error ? "Missing Phone number" : null}
-                  error={!!error}
-                />
-              )}
-            />
-          </Grid>
-          <Grid container justifyContent={"space-around"}>
-            <Controller
-              name="industry"
-              control={control}
-              render={({ field }) => (
-                <TextField {...field} label="Industry" margin="dense" />
-              )}
-            />
-            <Controller
-              name="stage"
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  value={field.value}
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                  }}
-                  label="Stage"
-                  select
-                  margin="dense"
-                  children={renderOptions(["PROSPECT", "CLIENT"])}
-                  helperText={error ? "Select stage" : null}
-                  error={!!error}
-                  sx={{
-                    width: "23.5ch",
-                  }}
-                />
-              )}
-            />
-          </Grid>
-          <Grid container justifyContent={"space-around"}>
-            <Controller
-              name="notes"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  multiline
-                  rows={4}
-                  label="Notes (Optional)"
-                  margin="normal"
-                />
-              )}
-            />
-          </Grid>
-
-          <DialogActions>
-            {profile && (
-              <Button
-                onClick={handleDelete}
-                disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
-              >
-                Delete
-              </Button>
+        <Grid container justifyContent={"space-around"}>
+          <Controller
+            name={`firstName`}
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                margin="dense"
+                label="First name"
+                helperText={error ? "Missing first name" : null}
+                error={!!error}
+              />
             )}
-            <Button
-              onClick={handleClose}
-              type="button"
-              disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
-            >
-              {profile ? "Update" : "Submit"}
-            </Button>
-          </DialogActions>
-        </form>
+          />
+          <Controller
+            name="lastName"
+            rules={{
+              required: true,
+            }}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Last name"
+                helperText={error ? "Missing last name" : null}
+                margin="dense"
+                error={!!error}
+              />
+            )}
+          />
+        </Grid>
+        <Grid container justifyContent={"space-around"}>
+          <Controller
+            name="email"
+            rules={{
+              required: true,
+            }}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Email"
+                margin="dense"
+                helperText={error ? "Missing Email" : null}
+                error={!!error}
+              />
+            )}
+          />
+          <Controller
+            name="phoneNumber"
+            rules={{
+              required: true,
+            }}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                margin="dense"
+                label="Phone number"
+                helperText={error ? "Missing Phone number" : null}
+                error={!!error}
+              />
+            )}
+          />
+        </Grid>
+        <Grid container justifyContent={"space-around"}>
+          <Controller
+            name="industry"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Industry" margin="dense" />
+            )}
+          />
+          <Controller
+            name="stage"
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                value={field.value}
+                onChange={(e) => {
+                  field.onChange(e.target.value);
+                }}
+                label="Stage"
+                select
+                margin="dense"
+                children={renderOptions(["PROSPECT", "CLIENT"])}
+                helperText={error ? "Select stage" : null}
+                error={!!error}
+                sx={{
+                  width: "23.5ch",
+                }}
+              />
+            )}
+          />
+        </Grid>
+        <Grid container justifyContent={"space-around"}>
+          <Controller
+            name="notes"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                multiline
+                rows={4}
+                label="Notes (Optional)"
+                margin="normal"
+              />
+            )}
+          />
+        </Grid>
       </DialogContent>
-    </Dialog>
+      <DialogActions>
+        {profile && (
+          <Button
+            onClick={handleDelete}
+            disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
+          >
+            Delete
+          </Button>
+        )}
+        <Button
+          onClick={handleClose}
+          type="button"
+          disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isCreateLoading || isDeleteLoading || isUpdateLoading}
+        >
+          {profile ? "Update" : "Submit"}
+        </Button>
+      </DialogActions>
+    </form>
+  );
+
+  return (
+    <DialogContainer
+      open={open}
+      handleClose={handleClose}
+      label="Profile"
+      selectedItem={profile}
+      children={children}
+    />
   );
 };
 

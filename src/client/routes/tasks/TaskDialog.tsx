@@ -28,6 +28,7 @@ import {
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { toast } from "react-toastify";
+import DialogContainer from "../../common/DialogContainer";
 interface DialogProps {
   open: boolean;
   onClose: () => void;
@@ -127,170 +128,175 @@ const TaskDialog = (props: DialogProps) => {
     onClose();
     reset();
   };
-
-  return (
-    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
-      <DialogTitle>{task ? "Edit Task" : "Add Task"}</DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item width={"100%"}>
-              <Controller
-                name="profile"
-                control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({
-                  field: { onChange, value, ...field },
-                  fieldState,
-                }) => (
-                  <Autocomplete
-                    {...field}
-                    fullWidth
-                    handleHomeEndKeys
-                    value={value}
-                    onChange={(_e, newValue) => {
-                      if (newValue) onChange(newValue);
-                    }}
-                    options={profiles || []}
-                    renderOption={(props, option) => (
-                      <MenuItem {...props} key={option.id}>
-                        {`${option.firstName} ${option.lastName}`}
-                      </MenuItem>
-                    )}
-                    isOptionEqualToValue={(option, value) =>
-                      option.id == value.id
-                    }
-                    getOptionLabel={(option) =>
-                      `${option.firstName} ${option.lastName}`
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Profile"
-                        inputRef={field.ref}
-                        helperText={
-                          fieldState.error
-                            ? "Select a profile to associate with task"
-                            : null
-                        }
-                        error={!!fieldState.error}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid
-              item
-              container
-              justifyContent={"space-between"}
-              rowGap={fullScreen ? 2 : 0}
-            >
-              <Controller
-                control={control}
-                name="urgency"
-                rules={{
-                  required: true,
-                }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Urgency"
-                    children={["LOW", "URGENT"].map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                    select
-                    sx={{ width: fullScreen ? "100%" : "23.5ch" }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="deadline"
-                render={({ field: { value, onChange, ref } }) => (
-                  <DatePicker
-                    disablePast
-                    value={value}
-                    inputRef={ref}
-                    onChange={onChange}
-                    label="Deadline"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item width={"100%"}>
-              <Controller
-                control={control}
-                name="description"
-                rules={{
-                  required: true,
-                }}
-                render={({ field, fieldState }) => (
-                  <TextField
-                    {...field}
-                    label="Description"
-                    multiline
-                    helperText={
-                      fieldState.error
-                        ? "Missing task description. What are we doing?"
-                        : null
-                    }
-                    error={!!fieldState.error}
-                    rows={4}
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
+  const children = (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item width={"100%"}>
+            <Controller
+              name="profile"
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({
+                field: { onChange, value, ...field },
+                fieldState,
+              }) => (
+                <Autocomplete
+                  {...field}
+                  fullWidth
+                  handleHomeEndKeys
+                  value={value}
+                  onChange={(_e, newValue) => {
+                    if (newValue) onChange(newValue);
+                  }}
+                  options={profiles || []}
+                  renderOption={(props, option) => (
+                    <MenuItem {...props} key={option.id}>
+                      {`${option.firstName} ${option.lastName}`}
+                    </MenuItem>
+                  )}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id == value.id
+                  }
+                  getOptionLabel={(option) =>
+                    `${option.firstName} ${option.lastName}`
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Profile"
+                      inputRef={field.ref}
+                      helperText={
+                        fieldState.error
+                          ? "Select a profile to associate with task"
+                          : null
+                      }
+                      error={!!fieldState.error}
+                    />
+                  )}
+                />
+              )}
+            />
           </Grid>
-        </DialogContent>
-        <Grid container direction={"column"} alignItems={"end"}>
-          <Grid item>
+          <Grid
+            item
+            container
+            justifyContent={"space-between"}
+            rowGap={fullScreen ? 2 : 0}
+          >
             <Controller
               control={control}
-              name="completed"
+              name="urgency"
+              rules={{
+                required: true,
+              }}
               render={({ field }) => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      {...field}
-                      checked={field.value}
-                      onChange={(_e, checked) => field.onChange(checked)}
-                    />
+                <TextField
+                  {...field}
+                  label="Urgency"
+                  children={["LOW", "URGENT"].map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                  select
+                  sx={{ width: fullScreen ? "100%" : "23.5ch" }}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="deadline"
+              render={({ field: { value, onChange, ref } }) => (
+                <DatePicker
+                  disablePast
+                  value={value}
+                  inputRef={ref}
+                  onChange={onChange}
+                  label="Deadline"
+                />
+              )}
+            />
+          </Grid>
+          <Grid item width={"100%"}>
+            <Controller
+              control={control}
+              name="description"
+              rules={{
+                required: true,
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Description"
+                  multiline
+                  helperText={
+                    fieldState.error
+                      ? "Missing task description. What are we doing?"
+                      : null
                   }
-                  label="Completed"
+                  error={!!fieldState.error}
+                  rows={4}
+                  fullWidth
                 />
               )}
             />
           </Grid>
         </Grid>
-        <DialogActions>
-          {task && (
-            <Button
-              onClick={handleDelete}
-              children={"Delete"}
-              disabled={createLoading || updateLoading || deleteLoading}
-            />
-          )}
+      </DialogContent>
+      <Grid container direction={"column"} alignItems={"end"}>
+        <Grid item>
+          <Controller
+            control={control}
+            name="completed"
+            render={({ field }) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    {...field}
+                    checked={field.value}
+                    onChange={(_e, checked) => field.onChange(checked)}
+                  />
+                }
+                label="Completed"
+              />
+            )}
+          />
+        </Grid>
+      </Grid>
+      <DialogActions>
+        {task && (
           <Button
-            onClick={handleClose}
+            onClick={handleDelete}
+            children={"Delete"}
             disabled={createLoading || updateLoading || deleteLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={createLoading || updateLoading || deleteLoading}
-          >
-            Submit
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+          />
+        )}
+        <Button
+          onClick={handleClose}
+          disabled={createLoading || updateLoading || deleteLoading}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          disabled={createLoading || updateLoading || deleteLoading}
+        >
+          Submit
+        </Button>
+      </DialogActions>
+    </form>
+  );
+  return (
+    <DialogContainer
+      children={children}
+      selectedItem={task}
+      label="Task"
+      open={open}
+      handleClose={handleClose}
+    />
   );
 };
 
