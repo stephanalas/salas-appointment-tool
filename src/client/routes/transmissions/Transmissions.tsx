@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import CheckIcon from "@mui/icons-material/Check";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetAllTransmissionsQuery } from "../../store/api";
 
@@ -8,14 +9,29 @@ const columns: GridColDef[] = [
   {
     field: "id",
     headerName: "Id",
+    headerAlign: "center",
+    align: "center",
+  },
+  {
+    field: "profileName",
+    headerName: "Profile",
+    width: 150,
   },
   {
     field: "sentTo",
     headerName: "Sent To",
+    width: 200,
   },
+
   {
     field: "isAppointment",
     headerName: "Appointment",
+    renderCell: (params) => {
+      return params.value ? <CheckIcon /> : null;
+    },
+    width: 150,
+    headerAlign: "center",
+    align: "center",
   },
   {
     field: "transmissionType",
