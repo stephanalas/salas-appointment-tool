@@ -68,8 +68,8 @@ const Transmissions = () => {
       ) : (
         <DataGrid
           columns={columns}
-          rows={data || []} // rows need to be transform for columns in api
-          // onRowClick={handleRowClick}
+          rows={data || []}
+          disableRowSelectionOnClick
         />
       )}
     </Grid>
