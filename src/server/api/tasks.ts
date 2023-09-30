@@ -21,6 +21,37 @@ taskRouter.get("/", async (req, res, next) => {
   }
 });
 
+taskRouter.get("/uncompletedCount", async (req, res, next) => {
+  try {
+    const { id: userId } = await getUser(req);
+    const uncompletedTasks = await prisma.task.findMany({
+      where: {
+        userId,
+        completed: false,
+      },
+    });
+
+    res.send({ count: uncompletedTasks.length });
+  } catch (error) {
+    next(error);
+  }
+});
+
+taskRouter.get("/urgentCount", async (req, res, next) => {
+  try {
+    const { id: userId } = await getUser(req);
+    const urgentTasks = await prisma.task.findMany({
+      where: {
+        userId,
+        urgency: "URGENT",
+      },
+    });
+    res.send({ count: urgentTasks.length });
+  } catch (error) {
+    next(error);
+  }
+});
+
 taskRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
