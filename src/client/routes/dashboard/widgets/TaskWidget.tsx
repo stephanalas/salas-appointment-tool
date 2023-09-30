@@ -12,7 +12,6 @@ type TaskWidgetProps = {
   setDialogOpen: () => void;
 };
 
-// TODO: task widget should get accurate count of tasks and urgent tasks
 const TaskWidget = (props: TaskWidgetProps) => {
   const { data: uncompletedCount, isLoading: uncompletedLoading } =
     useGetUncompleteTaskCountQuery();
