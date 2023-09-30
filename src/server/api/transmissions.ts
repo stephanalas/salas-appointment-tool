@@ -1,44 +1,35 @@
 import express from "express";
 import prisma from "../prisma/primsa.ts";
+import { DateTime } from "luxon";
 const transmissionRouter = express.Router();
-
-// wrote in two places. types could be shared between client and server using path mapping.
-enum TransmissionStatus {
-  SUCCESS,
-  FAILED,
-}
-
-interface Transmission {
-  id: number;
-  sentTo: string;
-  isAppointment: boolean;
-  transmissionType: string;
-  date: string;
-  time: string;
-  status: TransmissionStatus;
-}
 
 transmissionRouter.get("/", async (_req, res, next) => {
   try {
-    const transmissions = await prisma.transmission.findMany();
-    // format data
-    // findMany should include profiles associated with transmissions
-    //
+    const transmissions = await prisma.transmission.findMany({
+      include: {
+        profile: true,
+      },
+    });
 
     const formattedTransmissions = transmissions.map((transmission) => {
-      // separate time and date
+      const { profile, sentDateTime } = transmission;
+      const luxonDt = DateTime.fromJSDate(sentDateTime);
+      const date = luxonDt.toFormat("MM/dd/yy");
+      const time = luxonDt.toFormat("h:mm a");
+
       return {
         id: transmission.id,
-        // sentTo
+        profileName: `${profile.firstName} ${profile.lastName}`,
+        sentTo: profile.email,
         isAppointment: transmission.isAppointment,
         transmissionType: transmission.transmissionType,
-        // date
-        // time
+        date,
+        time,
         status: transmission.status,
       };
     });
 
-    res.send(transmissions);
+    res.send(formattedTransmissions);
   } catch (error) {
     next(error);
   }
