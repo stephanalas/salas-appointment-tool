@@ -55,6 +55,8 @@ const generateFakeRows = () => {
 };
 generateFakeRows();
 
+// TODO: populate data with appointments from db
+// appointments within 30 days
 const UpcomingAppointments = () => {
   const { breakpoints } = useTheme();
   const matches = useMediaQuery(breakpoints.down("md"));
