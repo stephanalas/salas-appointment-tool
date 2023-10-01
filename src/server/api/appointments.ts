@@ -31,6 +31,35 @@ appointmentRouter.get("/", async (req, res, next) => {
   }
 });
 
+appointmentRouter.get("/:timestamp", async (req, res, next) => {
+  try {
+    const timestamp = +req.params.timestamp;
+    const { id: userId } = await getUser(req);
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        profile: true,
+      },
+    });
+    // find better name but this date is what we filter against
+    const checkDate = DateTime.fromMillis(timestamp);
+    const filterAppointments = appointments.filter((appointment) => {
+      const { dateTime } = appointment;
+      const checkMonth = checkDate.month;
+      const checkYear = checkDate.year;
+      const appointmentMonth = dateTime.getMonth() + 1;
+      const appointmentYear = dateTime.getFullYear();
+      return checkMonth == appointmentMonth && checkYear == appointmentYear;
+    });
+
+    res.send(filterAppointments);
+  } catch (error) {
+    next(error);
+  }
+});
+
 appointmentRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
