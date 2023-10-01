@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const matches = useMediaQuery(breakpoints.down("md"));
+
   return (
     <Grid
       item
@@ -21,7 +22,9 @@ const Dashboard = () => {
       spacing={2}
       justifyContent="space-around"
       sx={{
-        margin: matches ? 0 : "1rem",
+        padding: matches ? 0 : "1rem",
+        marginTop: matches ? 0 : "1rem",
+        height: "100%",
       }}
     >
       <Grid
