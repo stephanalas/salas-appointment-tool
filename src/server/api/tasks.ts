@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "../prisma/primsa.ts";
 import { getUser } from "../utility.ts";
+import { DateTime } from "luxon";
 
 const taskRouter = express.Router();
 
@@ -47,6 +48,39 @@ taskRouter.get("/urgentCount", async (req, res, next) => {
       },
     });
     res.send({ count: urgentTasks.length });
+  } catch (error) {
+    next(error);
+  }
+});
+
+taskRouter.get("/:timestamp", async (req, res, next) => {
+  try {
+    const timestamp = +req.params.timestamp;
+    const { id: userId } = await getUser(req);
+    const tasksWithDeadline = await prisma.task.findMany({
+      where: {
+        userId,
+        deadline: { not: null },
+      },
+      include: {
+        profile: true,
+      },
+    });
+    const checkDate = DateTime.fromMillis(timestamp);
+    const filteredTasks = tasksWithDeadline.filter((task) => {
+      const { deadline } = task;
+      if (deadline) {
+        const checkMonth = checkDate.month;
+        const checkYear = checkDate.year;
+        // tasks will have deadline
+        const taskMonth = deadline?.getMonth() + 1;
+        const taskYear = deadline?.getFullYear();
+        return checkMonth == taskMonth && checkYear == taskYear;
+      }
+      return false;
+    });
+
+    res.send(filteredTasks);
   } catch (error) {
     next(error);
   }
