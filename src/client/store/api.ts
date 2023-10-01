@@ -171,6 +171,13 @@ export const api = createApi({
       }),
       providesTags: ["Task"],
     }),
+    getTasksByDeadlineMonth: builder.query<Task[], number>({
+      query: (timestamp) => ({
+        url: `tasks/${timestamp}`,
+        method: GET,
+      }),
+      providesTags: ["Task"],
+    }),
     getUncompleteTaskCount: builder.query<{ count: number }, void>({
       query: () => ({
         url: "tasks/uncompletedCount",
@@ -203,6 +210,13 @@ export const api = createApi({
     getAllAppointments: builder.query<Appointment[], void>({
       query: () => ({
         url: `appointments`,
+        method: GET,
+      }),
+      providesTags: ["Appointments"],
+    }),
+    getAppointmentsByMonth: builder.query<Appointment[], number>({
+      query: (timestamp) => ({
+        url: `appointments/${timestamp}`,
         method: GET,
       }),
       providesTags: ["Appointments"],
@@ -247,6 +261,8 @@ export const {
   useGetAllTransmissionsQuery,
   useGetUncompleteTaskCountQuery,
   useGetUrgentTaskCountQuery,
+  useGetAppointmentsByMonthQuery,
+  useGetTasksByDeadlineMonthQuery,
   useLoginMutation,
   useLogoutMutation,
   useCreateProfileMutation,
