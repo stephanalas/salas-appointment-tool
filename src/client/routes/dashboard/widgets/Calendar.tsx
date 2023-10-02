@@ -37,6 +37,7 @@ const AppCalendar = () => {
   } = useGetTasksByDeadlineMonthQuery(timestamp);
 
   function getCellItems(date: Date) {
+    // TODO: sort cellItems by time
     const cellItems: CellItem[] = [];
     const checkDay = date.getDate();
     const checkMonth = date.getMonth() + 1;
@@ -84,6 +85,7 @@ const AppCalendar = () => {
     }
     return cellItems;
   }
+
   function renderCell(date: Date) {
     const list = getCellItems(date);
     const displayList = list.filter((item, index) => index < 2);
@@ -129,13 +131,6 @@ const AppCalendar = () => {
         </ul>
       );
     }
-    /* TODO: List needs new type that contains 
-    time
-    identifier: ['Task', 'Appointment']
-    profile: associatedProfile acting as title
-    'identifier - profileName or something
-
-    */
   }
   function handleMonthChange(date: Date) {
     // get Task deadline due for month

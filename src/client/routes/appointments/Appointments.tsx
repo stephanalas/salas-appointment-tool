@@ -2,7 +2,8 @@ import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { Appointment, useGetAllAppointmentsQuery } from "../../store/api";
-import { Skeleton } from "@mui/material";
+import Skeleton from "@mui/material/Skeleton";
+import CheckIcon from "@mui/icons-material/Check";
 import { DateTime } from "luxon";
 import AppointmentDialog from "./AppointmentDialog";
 import TableContainer from "../../common/TableContainer";
@@ -36,6 +37,13 @@ const columns: GridColDef[] = [
     field: "notes",
     headerName: "Notes",
     width: 300,
+  },
+  {
+    field: "isCancelled",
+    headerName: "Cancelled",
+    renderCell: (params) => {
+      return params.value ? <CheckIcon /> : null;
+    },
   },
 ];
 

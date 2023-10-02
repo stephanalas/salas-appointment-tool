@@ -58,6 +58,7 @@ export interface Appointment {
   contact: string;
   dateTime: DateTime | string | null;
   notes: string | null;
+  isCancelled?: boolean;
 }
 enum TransmissionStatus {
   SUCCESS,
