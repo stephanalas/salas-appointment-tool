@@ -24,8 +24,8 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "isAppointment",
-    headerName: "Appointment",
+    field: "isCancelled",
+    headerName: "Cancelled",
     renderCell: (params) => {
       return params.value ? <CheckIcon /> : null;
     },
