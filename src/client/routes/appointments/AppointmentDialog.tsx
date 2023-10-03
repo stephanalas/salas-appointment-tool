@@ -37,8 +37,6 @@ interface IFormInput {
 // TODO: create a loading state after the appointmen has been created. email is working
 // check on toast notification after appointment creation
 // change contact to email address instead of phone number
-// description should also be changed to notes
-//
 const AppointmentDialog = (props: DialogProps) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -232,11 +230,11 @@ const AppointmentDialog = (props: DialogProps) => {
               render={({ field, fieldState }) => (
                 <TextField
                   {...field}
-                  label="Description"
+                  label="Notes"
                   multiline
                   helperText={
                     fieldState.error
-                      ? "Missing task description. What are we doing?"
+                      ? "Missing appointment notes. What are we doing?"
                       : null
                   }
                   error={!!fieldState.error}

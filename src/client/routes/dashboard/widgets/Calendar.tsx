@@ -14,8 +14,6 @@ import Skeleton from "@mui/material/Skeleton";
 // TODO:
 // onrowclick should open a dialog with list of appointments for the day in order of when it starts
 
-// Calendar accepts a renderCell function
-
 type CellItem = {
   identifier: string;
   profileName: string;

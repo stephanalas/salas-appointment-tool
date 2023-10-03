@@ -102,7 +102,6 @@ appointmentRouter.post("/", async (req, res, next) => {
             status: status ? "SUCCESS" : "FAILED",
             sentDateTime: DateTime.now().toISO()!,
             transmissionType: profile.stage,
-            isAppointment: true,
             profileId: profile.id,
           },
         });
@@ -117,6 +116,7 @@ appointmentRouter.post("/", async (req, res, next) => {
 
 appointmentRouter.put("/:appointmentId", async (req, res, next) => {
   try {
+    // todo: send rescheduling email
     const {
       body: data,
       params: { appointmentId },
@@ -142,7 +142,6 @@ appointmentRouter.put("/:appointmentId", async (req, res, next) => {
         },
       },
     });
-    // TODO: send email when appointment is updated
 
     res.send({ error: false, message: "Appointment updated" });
   } catch (error) {
@@ -152,7 +151,7 @@ appointmentRouter.put("/:appointmentId", async (req, res, next) => {
 
 appointmentRouter.delete("/:appointmentId", async (req, res, next) => {
   try {
-    // send cancel appointment email
+    // TODO: send cancel appointment email
     const { appointmentId } = req.params;
     await prisma.appointment.delete({
       where: {
