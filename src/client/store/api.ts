@@ -68,7 +68,7 @@ enum TransmissionStatus {
 interface Transmission {
   id: number;
   sentTo: string;
-  isAppointment: boolean;
+  isCancelled: boolean;
   transmissionType: string;
   date: string;
   time: string;
