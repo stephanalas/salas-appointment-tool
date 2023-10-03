@@ -72,7 +72,7 @@ model Transmission {
   status           TransmissionStatus
   sentDateTime     DateTime
   transmissionType Stage              @default(CUSTOM)
-  isCancelled      Boolean
+  isCancelled      Boolean            @default(false)
   profile          Profile            @relation(fields: [profileId], references: [id])
   profileId        Int
 }
