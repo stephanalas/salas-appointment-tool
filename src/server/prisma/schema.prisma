@@ -71,8 +71,8 @@ model Transmission {
   id               Int                @id @default(autoincrement())
   status           TransmissionStatus
   sentDateTime     DateTime
-  transmissionType Stage              @default(CUSTOM)
-  isCancelled      Boolean            @default(false)
+  clientType       Stage              @default(CUSTOM)
+  transmissionType String
   profile          Profile            @relation(fields: [profileId], references: [id])
   profileId        Int
 }
