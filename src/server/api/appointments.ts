@@ -101,7 +101,8 @@ appointmentRouter.post("/", async (req, res, next) => {
           data: {
             status: status ? "SUCCESS" : "FAILED",
             sentDateTime: DateTime.now().toISO()!,
-            transmissionType: profile.stage,
+            clientType: profile.stage,
+            transmissionType: "Initial",
             profileId: profile.id,
           },
         });
@@ -121,10 +122,10 @@ appointmentRouter.put("/:appointmentId", async (req, res, next) => {
       body: data,
       params: { appointmentId },
     } = req;
-    const { id } = await getUser(req);
+    const { id, name, email } = await getUser(req);
     delete data.id;
     delete data.contact;
-    await prisma.appointment.update({
+    const appointment = await prisma.appointment.update({
       where: {
         id: +appointmentId,
       },
@@ -142,7 +143,43 @@ appointmentRouter.put("/:appointmentId", async (req, res, next) => {
         },
       },
     });
+    const profile = await prisma.profile.findUniqueOrThrow({
+      where: {
+        id: appointment.profileId,
+      },
+    });
+    if (appointment) {
+      const message = {
+        from: process.env.EMAIL_FROM,
+        to: profile.email,
+        subject: "Appointment Rescheduled",
+        html: `
+        <h4>Appointment Rescheduled</h4>
+        <p> You have rescheduled an appointment with ${name}</p>
+        <p>date: ${appointment.dateTime}</p>
+        <p>time: ${appointment.dateTime}</p>
+        <p>Please email ${email} if you need to reschedule or for any questions</p>
+        `,
+      };
+      const mailResponse = await mailer.sendMail(message);
 
+      if (mailResponse) {
+        const { accepted, pending, rejected } = mailResponse;
+
+        const status =
+          accepted.includes(profile.email) && !pending && !rejected.length;
+        const transmission = await prisma.transmission.create({
+          data: {
+            status: status ? "SUCCESS" : "FAILED",
+            sentDateTime: DateTime.now().toISO()!,
+            transmissionType: "Rescheduled",
+            clientType: profile.stage,
+            profileId: profile.id,
+          },
+        });
+        console.log("Transmission Created: ", transmission);
+      }
+    }
     res.send({ error: false, message: "Appointment updated" });
   } catch (error) {
     next(error);
