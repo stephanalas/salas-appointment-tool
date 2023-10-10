@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.ts",
   "engines": {
-    "node": "18.16.0"
+    "node": "18.17.0"
   },
   "prisma": {
     "schema": "src/server/prisma/schema.prisma",
