@@ -197,10 +197,24 @@ appointmentRouter.put("/cancel/:appointmentId", async (req, res, next) => {
       },
       data: {
         isCancelled: true,
+        profile: {
+          connect: {
+            id: +data.profile.id,
+          },
+        },
+        user: {
+          connect: {
+            id,
+          },
+        },
+      },
+    });
+    const profile = await prisma.profile.findUniqueOrThrow({
+      where: {
+        id: appointment.profileId,
       },
     });
     if (appointment) {
-      const { profile } = data;
       const message = {
         from: process.env.EMAIL_FROM,
         to: profile.email,
@@ -220,12 +234,17 @@ appointmentRouter.put("/cancel/:appointmentId", async (req, res, next) => {
           accepted.includes(profile.email) && !pending && !rejected.length;
 
         const transmission = await prisma.transmission.create({
-          status: status ? "SUCCESS" : "FAILED",
-          sentDateTime: DateTime.now().toISO()!,
-          clientType: profile.stage,
-          transmissionType: "Cancelled",
-          profileId: profile.id,
+          data: {
+            status: status ? "SUCCESS" : "FAILED",
+            sentDateTime: DateTime.now().toISO()!,
+            clientType: profile.stage,
+            transmissionType: "Cancelled",
+            profileId: profile.id,
+          },
         });
+        console.log("Transmission Created: ", transmission);
+
+        res.send({ error: false, message: "Appointment Cancelled" });
       }
     }
   } catch (error) {
