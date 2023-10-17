@@ -84,6 +84,8 @@ export interface ProfileRowData {
   notes: string;
 }
 
+// TODO: CANCEL APPOINTMENT MUTATION
+
 const baseQuery = fetchBaseQuery({ baseUrl: "/api" });
 const baseQueryCheckToken: BaseQueryFn<
   string | FetchArgs,
