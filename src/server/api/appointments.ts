@@ -186,6 +186,53 @@ appointmentRouter.put("/:appointmentId", async (req, res, next) => {
   }
 });
 
+appointmentRouter.put("/cancel/:appointmentId", async (req, res, next) => {
+  try {
+    const { id, email, name } = await getUser(req);
+    const { appointmentId } = req.params;
+    const data = req.body;
+    const appointment = await prisma.appointment.update({
+      where: {
+        id: +appointmentId,
+      },
+      data: {
+        isCancelled: true,
+      },
+    });
+    if (appointment) {
+      const { profile } = data;
+      const message = {
+        from: process.env.EMAIL_FROM,
+        to: profile.email,
+        subject: "Appointment Cancelled",
+        html: `
+      <h4>Appointment Cancelled</h4>
+      <p> Your appointment on: ${appointment.dateTime} has been cancelled</p>
+      <p>Please email ${email} to schedule a new appointment or for any questions</p>
+      `,
+      };
+      const mailResponse = await mailer.sendMail(message);
+
+      if (mailResponse) {
+        const { accepted, pending, rejected } = mailResponse;
+
+        const status =
+          accepted.includes(profile.email) && !pending && !rejected.length;
+
+        const transmission = await prisma.transmission.create({
+          status: status ? "SUCCESS" : "FAILED",
+          sentDateTime: DateTime.now().toISO()!,
+          clientType: profile.stage,
+          transmissionType: "Cancelled",
+          profileId: profile.id,
+        });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 appointmentRouter.delete("/:appointmentId", async (req, res, next) => {
   try {
     // TODO: send cancel appointment email
@@ -195,6 +242,7 @@ appointmentRouter.delete("/:appointmentId", async (req, res, next) => {
         id: +appointmentId,
       },
     });
+
     res.send({ error: false, message: "Appointment cancelled and deleted" });
   } catch (error) {
     next(error);
